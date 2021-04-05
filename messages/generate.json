@@ -1,0 +1,5 @@
+{
+  "commandDescription": "generates documentation",
+  "outputdirFlagDescription": "directory to store the documentation files",
+  "resultformatFlagDescription": "result format stored in the outputdir; --json flag overrides this parameter"
+}
