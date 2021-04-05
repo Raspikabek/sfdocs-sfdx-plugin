@@ -3,11 +3,9 @@
 Salesforce Documentation Generator plugin for sfdx
 
 [![Version](https://img.shields.io/npm/v/sfdocs-sfdx-plugin.svg)](https://npmjs.org/package/sfdocs-sfdx-plugin)
-[![CircleCI](https://circleci.com/gh/raspikabek/sfdocs-sfdx-plugin/tree/master.svg?style=shield)](https://circleci.com/gh/raspikabek/sfdocs-sfdx-plugin/tree/master)
-[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/raspikabek/sfdocs-sfdx-plugin?branch=master&svg=true)](https://ci.appveyor.com/project/heroku/sfdocs-sfdx-plugin/branch/master)
 [![Codecov](https://codecov.io/gh/raspikabek/sfdocs-sfdx-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/raspikabek/sfdocs-sfdx-plugin)
-[![Downloads/week](https://img.shields.io/npm/dw/sfdocs-sfdx-plugin.svg)](https://npmjs.org/package/sfdocs-sfdx-plugin)
-[![License](https://img.shields.io/npm/l/sfdocs-sfdx-plugin.svg)](https://github.com/raspikabek/sfdocs-sfdx-plugin/blob/master/package.json)
+[![Downloads/week](https://img.shields.io/npm/dw/sfdocs-sfdx-plugin)](https://npmjs.org/package/sfdocs-sfdx-plugin)
+[![License](https://img.shields.io/npm/l/sfdocs-sfdx-plugin)](https://github.com/raspikabek/sfdocs-sfdx-plugin/blob/master/package.json)
 
 ## Overview
 
