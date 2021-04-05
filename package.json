@@ -1,7 +1,7 @@
 {
   "name": "sfdocs-sfdx-plugin",
   "description": "Salesforce Documentation Generator plugin for sfdx",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Eduardo Asenjo",
   "bugs": "https://github.com/raspikabek/sfdocs-sfdx-plugin/issues",
   "dependencies": {

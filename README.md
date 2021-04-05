@@ -29,7 +29,7 @@ $ npm install -g sfdocs-sfdx-plugin
 $ sfdx COMMAND
 running command...
 $ sfdx (-v|--version|version)
-sfdocs-sfdx-plugin/0.0.0 linux-x64 node-v14.16.0
+sfdocs-sfdx-plugin/0.1.0 linux-x64 node-v14.16.0
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx COMMAND
@@ -67,7 +67,7 @@ EXAMPLE
   $ sfdx sfdocs:generate --resultformat markdown --outputdir site
 ```
 
-_See code: [lib/commands/sfdocs/generate.js](https://github.com/raspikabek/sfdocs-sfdx-plugin/blob/v0.0.0/lib/commands/sfdocs/generate.js)_
+_See code: [lib/commands/sfdocs/generate.js](https://github.com/raspikabek/sfdocs-sfdx-plugin/blob/v0.1.0/lib/commands/sfdocs/generate.js)_
 <!-- commandsstop -->
 <!-- debugging-your-plugin -->
 
