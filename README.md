@@ -9,8 +9,31 @@ Salesforce Documentation Generator plugin for sfdx
 
 ## Overview
 
-Generate documentation given the content of your project.
+Generate documentation given the source content of your project.
 
+Content will be generated in the following structure:
+```
+sfdocs/
+  profiles/
+    Admin.md
+    MyCustomProfile.md
+  objects/
+    Account.md
+    CustomObject.md
+  <metadata-type>/
+    <element>.md
+  ...
+```
+
+This will bring the possibility to publish or import this content in public/private documentation pages for your own project.
+
+## Supported Metadata Types
+
+* Non as of yet
+
+Refer to the [Metadata Types documentation](https://developer.salesforce.com/docs/atlas.en-us.230.0.api_meta.meta/api_meta/meta_types_list.htm) to request new Metadata Types to support. Make sure is covered in the Source Tracking column of [Metadata Coverage Report](https://mdcoverage.secure.force.com/docs/metadata-coverage)
+
+## How to install & commands
 <!-- toc -->
 * [sfdocs-sfdx-plugin](#sfdocs-sfdx-plugin)
 * [Debugging your plugin](#debugging-your-plugin)
