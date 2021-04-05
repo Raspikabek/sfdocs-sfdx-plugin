@@ -6,10 +6,12 @@ Salesforce Documentation Generator plugin for sfdx
 [![CircleCI](https://circleci.com/gh/raspikabek/sfdocs-sfdx-plugin/tree/master.svg?style=shield)](https://circleci.com/gh/raspikabek/sfdocs-sfdx-plugin/tree/master)
 [![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/raspikabek/sfdocs-sfdx-plugin?branch=master&svg=true)](https://ci.appveyor.com/project/heroku/sfdocs-sfdx-plugin/branch/master)
 [![Codecov](https://codecov.io/gh/raspikabek/sfdocs-sfdx-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/raspikabek/sfdocs-sfdx-plugin)
-[![Greenkeeper](https://badges.greenkeeper.io/raspikabek/sfdocs-sfdx-plugin.svg)](https://greenkeeper.io/)
-[![Known Vulnerabilities](https://snyk.io/test/github/raspikabek/sfdocs-sfdx-plugin/badge.svg)](https://snyk.io/test/github/raspikabek/sfdocs-sfdx-plugin)
 [![Downloads/week](https://img.shields.io/npm/dw/sfdocs-sfdx-plugin.svg)](https://npmjs.org/package/sfdocs-sfdx-plugin)
 [![License](https://img.shields.io/npm/l/sfdocs-sfdx-plugin.svg)](https://github.com/raspikabek/sfdocs-sfdx-plugin/blob/master/package.json)
+
+## Overview
+
+Generate documentation given the content of your project.
 
 <!-- toc -->
 * [sfdocs-sfdx-plugin](#sfdocs-sfdx-plugin)
