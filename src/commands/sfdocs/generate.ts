@@ -1,5 +1,5 @@
 import { flags, SfdxCommand } from '@salesforce/command';
-import { Messages } from '@salesforce/core';
+import { fs, Messages } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 
 // Initialize Messages with the current plugin directory
@@ -30,9 +30,17 @@ export default class Org extends SfdxCommand {
     })
   };
 
-  protected static requiresProject = false;
+  protected static requiresProject = true;
 
   public async run(): Promise<AnyJson> {
+    const packagedirs = this.project.getUniquePackageDirectories();
+    for (const folder of packagedirs) {
+      const contentpath = `${folder.path}/main/default/`;
+      const packageFolders = await fs.readdir(contentpath);
+      for (const f of packageFolders) {
+        this.ux.log(`Folder name: ${f}`);
+      }
+    }
     this.ux.log('HELLO WORLD!');
     return { message: 'Hello world' };
   }
