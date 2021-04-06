@@ -6,7 +6,5 @@
     "importHelpers": true,
     "rootDir": "./src"
   },
-  "include": [
-    "./src/**/*"
-  ]
+  "include": ["./src/**/*"]
 }
