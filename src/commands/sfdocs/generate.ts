@@ -34,7 +34,7 @@ export default class Generate extends SfdxCommand {
     outputdir: flags.filepath({
       char: 'd',
       description: messages.getMessage('outputdirFlagDescription'),
-      default: 'sfdocs'
+      default: 'docs'
     }),
     resultformat: flags.enum({
       char: 'r',
@@ -52,7 +52,6 @@ export default class Generate extends SfdxCommand {
     const toReturn = {};
     for (const folder of packagedirs) {
       const contentpath = `${folder.path}/main/default`;
-      const packageFolders = await fs.readdir(contentpath);
       for (const mtdName in typeInfos.typeDefs) {
         if ((mtdName as string) in ENABLED_METADATA_TYPES) {
           const mtd: MetadataTypeInfo = typeInfos.typeDefs[mtdName];
@@ -116,15 +115,17 @@ export default class Generate extends SfdxCommand {
               /**
                * store info somewhere
                */
-              await fs.mkdirp(`docs/${mtd.defaultDirectory}/`);
+              await fs.mkdirp(
+                `${this.flags.outputdir}/${mtd.defaultDirectory}/`
+              );
               // TODO: to parse into markdown here!
               await fs.writeJson(
-                `docs/${mtd.defaultDirectory}/${contentElement.name}.json`,
+                `${this.flags.outputdir}/${mtd.defaultDirectory}/${contentElement.name}.json`,
                 mtdParsed
               );
               const mdparsedcontent = await jsonToMarkdown(mtdParsed);
               await fs.writeFile(
-                `docs/${mtd.defaultDirectory}/${contentElement.name}.md`,
+                `${this.flags.outputdir}/${mtd.defaultDirectory}/${contentElement.name}.md`,
                 mdparsedcontent
               );
               toReturn[mtd.defaultDirectory].push(mtdParsed);
@@ -145,15 +146,17 @@ export default class Generate extends SfdxCommand {
                 xmlParserOptions
               );
               mtdParsed['fullName'] = elementName;
-              await fs.mkdirp(`docs/${mtd.defaultDirectory}/`);
+              await fs.mkdirp(
+                `${this.flags.outputdir}/${mtd.defaultDirectory}/`
+              );
               // TODO: to parse into markdown here!
               await fs.writeJson(
-                `docs/${mtd.defaultDirectory}/${elementName}.json`,
+                `${this.flags.outputdir}/${mtd.defaultDirectory}/${elementName}.json`,
                 mtdParsed
               );
               const mdparsedcontent = await jsonToMarkdown(mtdParsed);
               await fs.writeFile(
-                `docs/${mtd.defaultDirectory}/${elementName}.md`,
+                `${this.flags.outputdir}/${mtd.defaultDirectory}/${elementName}.md`,
                 mdparsedcontent
               );
               toReturn[mtd.defaultDirectory].push(mtdParsed);
