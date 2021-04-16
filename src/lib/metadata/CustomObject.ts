@@ -4,17 +4,17 @@
 import { ActionOverride } from './ActionOverride';
 import { BusinessProcess } from './BusinessProcess';
 import { CompactLayout } from './CompactLayout';
-import { CustomSettingsType, CustomSettingsVisibility } from './CustomSettings';
 import { CustomField } from './CustomField';
+import { CustomSettingsType, CustomSettingsVisibility } from './CustomSettings';
 import { DeploymentStatus } from './DeploymentStatus';
-import { Metadata } from './Metadata';
-import { Gender, SharingModel, StartsWith } from './FieldTypes';
 import { FieldSet } from './FieldSet';
+import { Gender, SharingModel, StartsWith } from './FieldTypes';
 import { HistoryRetentionPolicy } from './HistoryRetentionPolicy';
 import { Index } from './Index';
+import { Metadata } from './Metadata';
 import {
-  PlatformEventType,
-  PlatformEventPublishBehavior
+  PlatformEventPublishBehavior,
+  PlatformEventType
 } from './PlatformEvent';
 import { RecordType } from './RecordType';
 import { SetupObjectVisibility } from './SetupObjectVisibility';
@@ -23,11 +23,11 @@ import { SharingRecalculation } from './SharingRecalculation';
 import { WebLink } from './WebLink';
 
 export interface CustomObject extends Metadata {
-  actionOverrides: Partial<ActionOverride>[];
+  actionOverrides: Array<Partial<ActionOverride>>;
   allowInChatterGroups: boolean;
-  businessProcesses: Partial<BusinessProcess>[];
+  businessProcesses: Array<Partial<BusinessProcess>>;
   compactLayoutAssignment: string;
-  compactLayouts: Partial<CompactLayout>[];
+  compactLayouts: Array<Partial<CompactLayout>>;
   customHelp: string;
   customHelpPage: string;
   customSettingsType: CustomSettingsType;

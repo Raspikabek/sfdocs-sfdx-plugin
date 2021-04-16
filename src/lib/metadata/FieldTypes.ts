@@ -2,7 +2,9 @@
  * Metadata API: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_field_types
  */
 
-export interface CustomField {}
+export interface CustomField {
+  fullname: string;
+}
 
 export enum DeleteConstraint {
   SetNull,
@@ -63,7 +65,9 @@ export enum Gender {
   ClassXVIII
 }
 
-export interface Picklist {}
+export interface Picklist {
+  fullname: string;
+}
 
 export enum SharingModel {
   Private,

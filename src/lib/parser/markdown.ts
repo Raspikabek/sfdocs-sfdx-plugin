@@ -2,8 +2,7 @@
  * TODO: define here functionality
  */
 import { AnyJson } from '@salesforce/ts-types';
-// import { json2md } from 'json2md';
-const json2md = require('json2md');
+import json2md = require('json2md');
 export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
   return json2md([
     { h1: 'JSON To Markdown' },

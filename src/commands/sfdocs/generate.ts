@@ -1,15 +1,14 @@
 import { flags, SfdxCommand } from '@salesforce/command';
 import { fs, Messages } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
-import { jsonToMarkdown } from '../../lib/parser/markdown';
+import { parseStringPromise, processors } from 'xml2js';
 import {
   ENABLED_METADATA_TYPES,
   MetadataTypeInfo,
   WorkspaceStrategy
 } from '../../lib/config/metadataTypeInfos';
-import { TypeInfos } from '../../lib/config/metadataTypeInfosConfig';
-import { CustomObject } from '../../lib/metadata/CustomObject';
-import { parseStringPromise, processors } from 'xml2js';
+import { typeInfos } from '../../lib/config/metadataTypeInfosConfig';
+import { jsonToMarkdown } from '../../lib/parser/markdown';
 
 // Initialize Messages with the current plugin directory
 Messages.importMessagesDirectory(__dirname);
@@ -54,9 +53,9 @@ export default class Generate extends SfdxCommand {
     for (const folder of packagedirs) {
       const contentpath = `${folder.path}/main/default`;
       const packageFolders = await fs.readdir(contentpath);
-      for (const mtdName in TypeInfos.typeDefs) {
+      for (const mtdName in typeInfos.typeDefs) {
         if ((mtdName as string) in ENABLED_METADATA_TYPES) {
-          const mtd: MetadataTypeInfo = TypeInfos.typeDefs[mtdName];
+          const mtd: MetadataTypeInfo = typeInfos.typeDefs[mtdName];
           toReturn[mtd.defaultDirectory] = [];
           this.ux.log(`Reading ${mtd.nameForMsgsPlural}...`);
           const mtdDirectoryContent = await fs.readdir(
@@ -97,7 +96,7 @@ export default class Generate extends SfdxCommand {
                       `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}`,
                       { encoding: 'utf8' }
                     );
-                    let elementsToAdd = [];
+                    const elementsToAdd = [];
                     for (const folderElement of foldercontent) {
                       const xmlelement = await fs.readFile(
                         `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}/${folderElement}`,

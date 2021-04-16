@@ -1,8 +1,8 @@
 /**
  * Metadata API: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm
  */
-import { Metadata } from './Metadata';
 import { FieldType, TreatBlanksAs, ValueSet } from './FieldTypes';
+import { Metadata } from './Metadata';
 
 export interface CustomField extends Metadata {
   businessOwnerGroup: string;

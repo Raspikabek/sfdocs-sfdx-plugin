@@ -1,4 +1,4 @@
-export const TypeInfos = {
+export const typeInfos = {
   typeDefs: {
     AppointmentSchedulingPolicy: {
       metadataName: 'AppointmentSchedulingPolicy',
