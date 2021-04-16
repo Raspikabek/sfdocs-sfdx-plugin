@@ -386,6 +386,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/json2md@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@types/json2md/-/json2md-1.5.0.tgz#0d940ac45f2ad19ff68fc43747953f53b1782204"
+  integrity sha512-hHUubzEkXd3ciDP+TF0EiqwRSTp5beLIsnZ6eIfBu56S7AA7zPXxnkS2F7OtB65X4p1+o8SklRZoZii8jfx3ng==
+
 "@types/lodash@*":
   version "4.14.168"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
@@ -1839,6 +1844,11 @@ indent-string@^4.0.0:
   resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-4.0.0.tgz#624f8f4497d619b2d9768531d58f4122854d7251"
   integrity sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==
 
+indento@^1.1.7:
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/indento/-/indento-1.1.13.tgz#751331b327c04740eeb7be40c5606e6e255c9e36"
+  integrity sha512-YZWk3mreBEM7sBPddsiQnW9Z8SGg/gNpFfscJq00HCDS7pxcQWWWMSVKJU7YkTRyDu1Zv2s8zaK8gQWKmCXHlg==
+
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
@@ -2179,6 +2189,13 @@ json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
   integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
+
+json2md@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/json2md/-/json2md-1.10.0.tgz#dfdc1ffb8a3916da1bfb0188bc88529117e937aa"
+  integrity sha512-Rq7mx1wnLZIKn4vb4hrVUMVxHYNRzMVoG3PwYzx6uRlGGjcgjqIS7J0h553Ri5mbLq8zX61jVP+eL8rGZ68zSA==
+  dependencies:
+    indento "^1.1.7"
 
 jsonfile@^4.0.0:
   version "4.0.0"

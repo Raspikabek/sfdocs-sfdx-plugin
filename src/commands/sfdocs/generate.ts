@@ -1,6 +1,7 @@
 import { flags, SfdxCommand } from '@salesforce/command';
 import { fs, Messages } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
+import { jsonToMarkdown } from '../../lib/parser/markdown';
 import {
   ENABLED_METADATA_TYPES,
   MetadataTypeInfo,
@@ -117,9 +118,15 @@ export default class Generate extends SfdxCommand {
                * store info somewhere
                */
               await fs.mkdirp(`docs/${mtd.defaultDirectory}/`);
+              // TODO: to parse into markdown here!
               await fs.writeJson(
                 `docs/${mtd.defaultDirectory}/${contentElement.name}.json`,
                 mtdParsed
+              );
+              const mdparsedcontent = await jsonToMarkdown(mtdParsed);
+              await fs.writeFile(
+                `docs/${mtd.defaultDirectory}/${contentElement.name}.md`,
+                mdparsedcontent
               );
               toReturn[mtd.defaultDirectory].push(mtdParsed);
             } else {
@@ -140,9 +147,15 @@ export default class Generate extends SfdxCommand {
               );
               mtdParsed['fullName'] = elementName;
               await fs.mkdirp(`docs/${mtd.defaultDirectory}/`);
+              // TODO: to parse into markdown here!
               await fs.writeJson(
                 `docs/${mtd.defaultDirectory}/${elementName}.json`,
                 mtdParsed
+              );
+              const mdparsedcontent = await jsonToMarkdown(mtdParsed);
+              await fs.writeFile(
+                `docs/${mtd.defaultDirectory}/${elementName}.md`,
+                mdparsedcontent
               );
               toReturn[mtd.defaultDirectory].push(mtdParsed);
             }
@@ -155,6 +168,7 @@ export default class Generate extends SfdxCommand {
      * TODO: new method to create markdown files
      */
     this.ux.stopSpinner();
+    // jsonToMarkdown({});
     return toReturn;
   }
 }
