@@ -12,16 +12,20 @@ Salesforce Documentation Generator plugin for sfdx
 Generate documentation given the source content of your project.
 
 Content will be generated in the following structure:
-```
-sfdocs/
-  profiles/
-    Admin.md
-    MyCustomProfile.md
-  objects/
-    Account.md
-    CustomObject.md
-  <metadata-type>/
-    <element>.md
+```sh
+docs/ # root folder defined by <outputdir> flag
+  force-app/ # one folder per package in the sfdx-project
+    profiles/ # folder per MetadataTypeInfo 
+      Admin.md # md file per element
+      MyCustomProfile.md
+    objects/
+      Account.md
+      CustomObject.md
+    <metadata-type>/
+      <element>.md
+  awesome-app/ # my second package in the project
+    objects/
+      ...
   ...
 ```
 
