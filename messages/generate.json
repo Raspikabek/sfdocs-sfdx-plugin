@@ -1,5 +1,6 @@
 {
   "commandDescription": "generates documentation",
   "outputdirFlagDescription": "directory to store the documentation files",
-  "resultformatFlagDescription": "result format stored in the outputdir; --json flag overrides this parameter"
+  "resultformatFlagDescription": "result format stored in the outputdir; --json flag overrides this parameter",
+  "packagesFlagDescription": "list of package names to generate documentation, leave it empty to generate from all existing packages"
 }

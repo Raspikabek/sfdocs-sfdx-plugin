@@ -1,5 +1,5 @@
 import { flags, SfdxCommand } from '@salesforce/command';
-import { fs, Messages } from '@salesforce/core';
+import { fs, Messages, NamedPackageDir } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 import { parseStringPromise, processors } from 'xml2js';
 import {
@@ -42,6 +42,10 @@ export default class Generate extends SfdxCommand {
       description: messages.getMessage('resultformatFlagDescription'),
       options: ['markdown', 'json'],
       default: 'markdown'
+    }),
+    packages: flags.array({
+      char: 'p',
+      description: messages.getMessage('packagesFlagDescription')
     })
   };
 
@@ -49,9 +53,8 @@ export default class Generate extends SfdxCommand {
 
   public async run(): Promise<AnyJson> {
     this.ux.startSpinner('Generating documentation');
-    const packagedirs = this.project.getUniquePackageDirectories();
     const toReturn = {};
-    for (const folder of packagedirs) {
+    for (const folder of await this.getPackagesToProcess()) {
       const contentpath = `${folder.path}/main/default`;
       for (const mtdName in typeInfos.typeDefs) {
         if ((mtdName as string) in ENABLED_METADATA_TYPES) {
@@ -177,7 +180,16 @@ export default class Generate extends SfdxCommand {
       }
     }
     this.ux.stopSpinner();
-    // jsonToMarkdown({});
     return toReturn;
+  }
+
+  private async getPackagesToProcess(): Promise<NamedPackageDir[]> {
+    if (!this.flags.packages?.length) {
+      return this.project.getUniquePackageDirectories();
+    }
+
+    return this.project
+      .getUniquePackageDirectories()
+      .filter((element) => this.flags.packages.includes(element.name));
   }
 }

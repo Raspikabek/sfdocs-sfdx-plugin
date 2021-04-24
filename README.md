@@ -63,9 +63,9 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-sfdocsgenerate--d-filepath--r-markdownjson---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-sfdocsgenerate--d-filepath--r-markdownjson--p-array---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 generates documentation
 
@@ -73,12 +73,16 @@ generates documentation
 generates documentation
 
 USAGE
-  $ sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [--json] [--loglevel 
+  $ sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -d, --outputdir=outputdir                                                         [default: sfdocs] directory to store
+  -d, --outputdir=outputdir                                                         [default: docs] directory to store
                                                                                     the documentation files
+
+  -p, --packages=packages                                                           list of package names to generate
+                                                                                    documentation, leave it empty to
+                                                                                    generate from all existing packages
 
   -r, --resultformat=(markdown|json)                                                [default: markdown] result format
                                                                                     stored in the outputdir; --json flag
