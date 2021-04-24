@@ -8,6 +8,7 @@ import {
   WorkspaceStrategy
 } from '../../lib/config/metadataTypeInfos';
 import { typeInfos } from '../../lib/config/metadataTypeInfosConfig';
+import { Metadata } from '../../lib/metadata/Metadata';
 import { jsonToMarkdown } from '../../lib/parser/markdown';
 
 // Initialize Messages with the current plugin directory
@@ -51,7 +52,6 @@ export default class Generate extends SfdxCommand {
     const packagedirs = this.project.getUniquePackageDirectories();
     const toReturn = {};
     for (const folder of packagedirs) {
-      this.ux.logJson(folder);
       const contentpath = `${folder.path}/main/default`;
       for (const mtdName in typeInfos.typeDefs) {
         if ((mtdName as string) in ENABLED_METADATA_TYPES) {
@@ -73,7 +73,7 @@ export default class Generate extends SfdxCommand {
                 WorkspaceStrategy.FolderPerSubtype
               ) {
                 const elementpath = `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}`;
-                let mtdParsed = {};
+                let mtdParsed: Metadata = { fullName: contentElement.name };
                 if (
                   fs.fileExistsSync(
                     `${elementpath}/${contentElement.name}.${mtd.ext}-meta.xml`
@@ -89,8 +89,6 @@ export default class Generate extends SfdxCommand {
                     xmlParserOptions
                   );
                 }
-
-                mtdParsed['fullName'] = contentElement.name;
 
                 if (mtd.decompositionConfig.decompositions.length > 0) {
                   /**
@@ -153,11 +151,11 @@ export default class Generate extends SfdxCommand {
                   `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}`,
                   { encoding: 'utf8' }
                 );
-                const mtdParsed = await parseStringPromise(
+                const mtdParsed: Metadata = await parseStringPromise(
                   content,
                   xmlParserOptions
                 );
-                mtdParsed['fullName'] = elementName;
+                mtdParsed.fullName = elementName;
                 await fs.mkdirp(
                   `${this.flags.outputdir}/${folder.name}/${mtd.defaultDirectory}/`
                 );
@@ -178,10 +176,6 @@ export default class Generate extends SfdxCommand {
         }
       }
     }
-    /**
-     * Call creation of markdown given the content of toReturn variable
-     * TODO: new method to create markdown files
-     */
     this.ux.stopSpinner();
     // jsonToMarkdown({});
     return toReturn;
