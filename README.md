@@ -3,7 +3,6 @@
 Salesforce Documentation Generator plugin for sfdx
 
 [![Version](https://img.shields.io/npm/v/sfdocs-sfdx-plugin.svg)](https://npmjs.org/package/sfdocs-sfdx-plugin)
-[![Codecov](https://codecov.io/gh/raspikabek/sfdocs-sfdx-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/raspikabek/sfdocs-sfdx-plugin)
 [![Downloads/week](https://img.shields.io/npm/dw/sfdocs-sfdx-plugin)](https://npmjs.org/package/sfdocs-sfdx-plugin)
 [![License](https://img.shields.io/npm/l/sfdocs-sfdx-plugin)](https://github.com/raspikabek/sfdocs-sfdx-plugin/blob/master/package.json)
 
@@ -33,7 +32,9 @@ This will bring the possibility to publish or import this content in public/priv
 
 ## Supported Metadata Types
 
-* Non as of yet
+* Objects
+* Profiles
+* Permission Sets
 
 Refer to the [Metadata Types documentation](https://developer.salesforce.com/docs/atlas.en-us.230.0.api_meta.meta/api_meta/meta_types_list.htm) to request new Metadata Types to support. Make sure is covered in the Source Tracking column of [Metadata Coverage Report](https://mdcoverage.secure.force.com/docs/metadata-coverage)
 
@@ -100,20 +101,20 @@ _See code: [lib/commands/sfdocs/generate.js](https://github.com/raspikabek/sfdoc
 
 We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
 
-To debug the `hello:org` command:
+To debug the `sfdocs:generate` command:
 
 1. Start the inspector
 
 If you linked your plugin to the sfdx cli, call your command with the `dev-suspend` switch:
 
 ```sh-session
-$ sfdx hello:org -u myOrg@example.com --dev-suspend
+$ sfdx sfdocs:generate -u myOrg@example.com --dev-suspend
 ```
 
 Alternatively, to call your command using the `bin/run` script, set the `NODE_OPTIONS` environment variable to `--inspect-brk` when starting the debugger:
 
 ```sh-session
-$ NODE_OPTIONS=--inspect-brk bin/run hello:org -u myOrg@example.com
+$ NODE_OPTIONS=--inspect-brk bin/run sfdocs:generate -u myOrg@example.com
 ```
 
 2. Set some breakpoints in your command code
