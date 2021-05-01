@@ -3,7 +3,6 @@ import { fs, Messages, NamedPackageDir } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 import { parseStringPromise, processors } from 'xml2js';
 import {
-  ENABLED_METADATA_TYPES,
   MetadataTypeInfo,
   WorkspaceStrategy
 } from '../../lib/config/metadataTypeInfos';
@@ -54,136 +53,152 @@ export default class Generate extends SfdxCommand {
   public async run(): Promise<AnyJson> {
     this.ux.startSpinner('Generating documentation');
     const toReturn = {};
-    for (const folder of await this.getPackagesToProcess()) {
-      const contentpath = `${folder.path}/main/default`;
-      for (const mtdName in typeInfos.typeDefs) {
-        if ((mtdName as string) in ENABLED_METADATA_TYPES) {
-          const mtd: MetadataTypeInfo = typeInfos.typeDefs[mtdName];
-          toReturn[mtd.defaultDirectory] = [];
-          if (fs.existsSync(`${contentpath}/${mtd.defaultDirectory}`)) {
-            this.ux.log(`Reading ${mtd.nameForMsgsPlural}...`);
-            const mtdDirectoryContent = await fs.readdir(
-              `${contentpath}/${mtd.defaultDirectory}`,
-              { withFileTypes: true }
-            );
-            /**
-             * In SOURCE code metadata like SObjects is stored in folders per object.
-             * The attribute that defines this seems to be: "workspaceStrategy": "folderPerSubtype",
-             */
-            for (const contentElement of mtdDirectoryContent) {
-              if (
-                mtd.decompositionConfig.workspaceStrategy ===
-                WorkspaceStrategy.FolderPerSubtype
-              ) {
-                const elementpath = `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}`;
-                let mtdParsed: Metadata = { fullName: contentElement.name };
+    for (const namedPackageDir of await this.getProjectPackagesToProcess()) {
+      const packageSourcePath = `${namedPackageDir.path}/main/default`;
+      this.ux.startSpinner(`Parsing ${namedPackageDir.name}`);
+      for (const typeInfoDefinition in typeInfos.typeDefs) {
+        const mtd: MetadataTypeInfo = typeInfos.typeDefs[typeInfoDefinition];
+        if (!fs.existsSync(`${packageSourcePath}/${mtd.defaultDirectory}`)) {
+          continue;
+        }
+
+        toReturn[mtd.defaultDirectory] = [];
+        for (const contentElement of fs.readdirSync(
+          `${packageSourcePath}/${mtd.defaultDirectory}`,
+          { withFileTypes: true }
+        )) {
+          /**
+           * In SOURCE code metadata like SObjects is stored in folders per object.
+           * The attribute that defines this seems to be: "workspaceStrategy": "folderPerSubtype",
+           */
+          switch (mtd.decompositionConfig.workspaceStrategy) {
+            case WorkspaceStrategy.FolderPerSubtype:
+              // console.log('Do something');
+              break;
+            case WorkspaceStrategy.InFolderMetadataType:
+              // console.log('In Folder MetadataType');
+              break;
+            default:
+            // console.log('NonDecomposed');
+          }
+
+          const elementpath = `${packageSourcePath}/${mtd.defaultDirectory}/${contentElement.name}`;
+          if (
+            mtd.decompositionConfig.workspaceStrategy ===
+            WorkspaceStrategy.FolderPerSubtype
+          ) {
+            let mtdParsed: Metadata = { fullName: contentElement.name };
+            if (
+              fs.fileExistsSync(
+                `${elementpath}/${contentElement.name}.${mtd.ext}-meta.xml`
+              )
+            ) {
+              const content = fs.readFileSync(
+                `${packageSourcePath}/${mtd.defaultDirectory}/${contentElement.name}/${contentElement.name}.${mtd.ext}-meta.xml`,
+                { encoding: 'utf8' }
+              );
+
+              mtdParsed = await parseStringPromise(content, xmlParserOptions);
+            }
+
+            if (mtd.decompositionConfig.decompositions.length > 0) {
+              /**
+               * Per descomposition we check if the folder does exists to get its content
+               */
+              for (const element of mtd.decompositionConfig.decompositions) {
                 if (
-                  fs.fileExistsSync(
-                    `${elementpath}/${contentElement.name}.${mtd.ext}-meta.xml`
+                  fs.existsSync(
+                    `${packageSourcePath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}`
                   )
                 ) {
-                  const content = await fs.readFile(
-                    `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}/${contentElement.name}.${mtd.ext}-meta.xml`,
+                  const foldercontent = await fs.readdir(
+                    `${packageSourcePath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}`,
                     { encoding: 'utf8' }
                   );
-
-                  mtdParsed = await parseStringPromise(
-                    content,
-                    xmlParserOptions
-                  );
-                }
-
-                if (mtd.decompositionConfig.decompositions.length > 0) {
-                  /**
-                   * Per descomposition we check if the folder does exists to get its content
-                   */
-                  for (const element of mtd.decompositionConfig
-                    .decompositions) {
-                    if (
-                      fs.existsSync(
-                        `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}`
-                      )
-                    ) {
-                      const foldercontent = await fs.readdir(
-                        `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}`,
-                        { encoding: 'utf8' }
-                      );
-                      const elementsToAdd = [];
-                      for (const folderElement of foldercontent) {
-                        const xmlelement = await fs.readFile(
-                          `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}/${folderElement}`,
-                          { encoding: 'utf8' }
-                        );
-                        const parsedelement = await parseStringPromise(
-                          xmlelement,
-                          xmlParserOptions
-                        );
-                        elementsToAdd.push(parsedelement);
-                      }
-                      mtdParsed[element.xmlFragmentName] = elementsToAdd;
-                    }
+                  const elementsToAdd = [];
+                  for (const folderElement of foldercontent) {
+                    const xmlelement = await fs.readFile(
+                      `${packageSourcePath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}/${folderElement}`,
+                      { encoding: 'utf8' }
+                    );
+                    const parsedelement = await parseStringPromise(
+                      xmlelement,
+                      xmlParserOptions
+                    );
+                    elementsToAdd.push(parsedelement);
                   }
+                  mtdParsed[element.xmlFragmentName] = elementsToAdd;
                 }
-
-                /**
-                 * store info somewhere
-                 */
-                await fs.mkdirp(
-                  `${this.flags.outputdir}/${folder.name}/${mtd.defaultDirectory}/`
-                );
-                // TODO: to parse into markdown here!
-                await fs.writeJson(
-                  `${this.flags.outputdir}/${folder.name}/${mtd.defaultDirectory}/${contentElement.name}.json`,
-                  mtdParsed
-                );
-                const mdparsedcontent = await jsonToMarkdown(mtdParsed);
-                await fs.writeFile(
-                  `${this.flags.outputdir}/${folder.name}/${mtd.defaultDirectory}/${contentElement.name}.md`,
-                  mdparsedcontent
-                );
-                toReturn[mtd.defaultDirectory].push(mtdParsed);
-              } else {
-                /**
-                 * when the type is not stored in subfolders
-                 */
-                const elementName = contentElement.name.substr(
-                  0,
-                  contentElement.name.indexOf('.')
-                );
-                const content = await fs.readFile(
-                  `${contentpath}/${mtd.defaultDirectory}/${contentElement.name}`,
-                  { encoding: 'utf8' }
-                );
-                const mtdParsed: Metadata = await parseStringPromise(
-                  content,
-                  xmlParserOptions
-                );
-                mtdParsed.fullName = elementName;
-                await fs.mkdirp(
-                  `${this.flags.outputdir}/${folder.name}/${mtd.defaultDirectory}/`
-                );
-                // TODO: to parse into markdown here!
-                await fs.writeJson(
-                  `${this.flags.outputdir}/${folder.name}/${mtd.defaultDirectory}/${elementName}.json`,
-                  mtdParsed
-                );
-                const mdparsedcontent = await jsonToMarkdown(mtdParsed);
-                await fs.writeFile(
-                  `${this.flags.outputdir}/${folder.name}/${mtd.defaultDirectory}/${elementName}.md`,
-                  mdparsedcontent
-                );
-                toReturn[mtd.defaultDirectory].push(mtdParsed);
               }
             }
+
+            /**
+             * store info somewhere
+             */
+            await fs.mkdirp(
+              `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/`
+            );
+            // TODO: to parse into markdown here!
+            await fs.writeJson(
+              `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.json`,
+              mtdParsed
+            );
+            const mdparsedcontent = await jsonToMarkdown(mtdParsed);
+            await fs.writeFile(
+              `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.md`,
+              mdparsedcontent
+            );
+            toReturn[mtd.defaultDirectory].push(mtdParsed);
+          } else {
+            // TODO: if is directory, check for content has '*-meta.xml' file
+
+            if (
+              mtd.decompositionConfig.strategy !== 'nonDecomposed' ||
+              contentElement.isDirectory() ||
+              !contentElement.name.includes('-meta.xml')
+            ) {
+              continue;
+            }
+            /**
+             * when the type is not stored in subfolders
+             */
+            const elementName = contentElement.name.substr(
+              0,
+              contentElement.name.indexOf('.')
+            );
+            const content = await fs.readFile(
+              `${packageSourcePath}/${mtd.defaultDirectory}/${contentElement.name}`,
+              { encoding: 'utf8' }
+            );
+            const mtdParsed: Metadata = await parseStringPromise(
+              content,
+              xmlParserOptions
+            );
+            mtdParsed.fullName = elementName;
+            await fs.mkdirp(
+              `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/`
+            );
+            // TODO: to parse into markdown here!
+            await fs.writeJson(
+              `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.json`,
+              mtdParsed
+            );
+            const mdparsedcontent = await jsonToMarkdown(mtdParsed);
+            await fs.writeFile(
+              `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.md`,
+              mdparsedcontent
+            );
+            toReturn[mtd.defaultDirectory].push(mtdParsed);
           }
         }
       }
+      this.ux.stopSpinner();
     }
     this.ux.stopSpinner();
     return toReturn;
   }
 
-  private async getPackagesToProcess(): Promise<NamedPackageDir[]> {
+  private async getProjectPackagesToProcess(): Promise<NamedPackageDir[]> {
     if (!this.flags.packages?.length) {
       return this.project.getUniquePackageDirectories();
     }

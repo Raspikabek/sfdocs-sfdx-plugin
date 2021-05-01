@@ -3,13 +3,10 @@
  * TODO: The interfaces are not completed as of yet. More elements might be required
  */
 
-export enum ENABLED_METADATA_TYPES {
-  CustomObject,
-  PermissionSet
-}
-
 export enum WorkspaceStrategy {
-  FolderPerSubtype = 'folderPerSubtype'
+  FolderPerSubtype = 'folderPerSubtype',
+  NonDecomposed = 'nonDecomposed',
+  InFolderMetadataType = 'inFolderMetadataType'
 }
 
 export interface MetadataTypeInfo {
@@ -27,6 +24,7 @@ export interface MetadataTypeInfo {
 interface DecompositionConfig {
   metadataName: string;
   decompositions: Decomposition[];
+  strategy: string;
   workspaceStrategy: string;
 }
 
