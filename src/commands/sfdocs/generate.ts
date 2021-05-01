@@ -49,13 +49,19 @@ export default class Generate extends SfdxCommand {
     ignoretypes: flags.array({
       char: 'i',
       description: messages.getMessage('ignoretypesFlagDescription')
+    }),
+    reset: flags.boolean({
+      description: messages.getMessage('resetFlagDescription')
     })
   };
 
   protected static requiresProject = true;
 
   public async run(): Promise<AnyJson> {
-    this.ux.startSpinner('Generating documentation');
+    if (this.flags.reset && fs.existsSync(this.flags.outputdir)) {
+      await fs.remove(this.flags.outputdir);
+    }
+
     const toReturn = {};
     for (const namedPackageDir of await this.getProjectPackagesToProcess()) {
       const packageSourcePath = `${namedPackageDir.path}/main/default`;

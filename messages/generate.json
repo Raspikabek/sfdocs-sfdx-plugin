@@ -3,5 +3,6 @@
   "outputdirFlagDescription": "directory to store the documentation files",
   "resultformatFlagDescription": "result format stored in the outputdir; --json flag overrides this parameter",
   "packagesFlagDescription": "list of package names to generate documentation, leave it empty to generate from all existing packages",
-  "ignoretypesFlagDescription": "list of metadata type infos to ignore. valid values are metadata type info names or folder names (CustomApplication or applications, CustomObject or objects)"
+  "ignoretypesFlagDescription": "list of metadata type infos to ignore. valid values are metadata type info names or folder names (CustomApplication or applications, CustomObject or objects)",
+  "resetFlagDescription": "remove existing target docs folder"
 }

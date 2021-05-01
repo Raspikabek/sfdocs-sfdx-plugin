@@ -63,9 +63,9 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-sfdocsgenerate--d-filepath--r-markdownjson--p-array--i-array---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--reset] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-sfdocsgenerate--d-filepath--r-markdownjson--p-array--i-array---reset---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--reset] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 generates documentation
 
@@ -73,7 +73,7 @@ generates documentation
 generates documentation
 
 USAGE
-  $ sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--json] [--loglevel 
+  $ sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--reset] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -98,6 +98,8 @@ OPTIONS
 
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+
+  --reset                                                                           remove existing target docs folder
 
 EXAMPLE
   $ sfdx sfdocs:generate --resultformat markdown --outputdir site
