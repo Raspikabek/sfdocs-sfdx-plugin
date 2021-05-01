@@ -45,6 +45,10 @@ export default class Generate extends SfdxCommand {
     packages: flags.array({
       char: 'p',
       description: messages.getMessage('packagesFlagDescription')
+    }),
+    ignoretypes: flags.array({
+      char: 'i',
+      description: messages.getMessage('ignoretypesFlagDescription')
     })
   };
 
@@ -58,7 +62,11 @@ export default class Generate extends SfdxCommand {
       this.ux.startSpinner(`Parsing ${namedPackageDir.name}`);
       for (const typeInfoDefinition in typeInfos.typeDefs) {
         const mtd: MetadataTypeInfo = typeInfos.typeDefs[typeInfoDefinition];
-        if (!fs.existsSync(`${packageSourcePath}/${mtd.defaultDirectory}`)) {
+        if (
+          !fs.existsSync(`${packageSourcePath}/${mtd.defaultDirectory}`) ||
+          this.flags.ignoretypes.includes(mtd.defaultDirectory) ||
+          this.flags.ignoretypes.includes(mtd.metadataName)
+        ) {
           continue;
         }
 

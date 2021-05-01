@@ -63,9 +63,9 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-sfdocsgenerate--d-filepath--r-markdownjson--p-array---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-sfdocsgenerate--d-filepath--r-markdownjson--p-array--i-array---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 generates documentation
 
@@ -73,12 +73,18 @@ generates documentation
 generates documentation
 
 USAGE
-  $ sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [--json] [--loglevel 
+  $ sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
   -d, --outputdir=outputdir                                                         [default: docs] directory to store
                                                                                     the documentation files
+
+  -i, --ignoretypes=ignoretypes                                                     list of metadata type infos to
+                                                                                    ignore. valid values are metadata
+                                                                                    type info names or folder names
+                                                                                    (CustomApplication or applications,
+                                                                                    CustomObject or objects)
 
   -p, --packages=packages                                                           list of package names to generate
                                                                                     documentation, leave it empty to
