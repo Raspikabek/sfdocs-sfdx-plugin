@@ -8,6 +8,8 @@ Salesforce Documentation Generator plugin for sfdx
 
 ## Overview
 
+Check the [Documentation](http://sfdocs.netlify.app/)
+
 Generate documentation given the source content of your project.
 
 Content will be generated in the following structure:
