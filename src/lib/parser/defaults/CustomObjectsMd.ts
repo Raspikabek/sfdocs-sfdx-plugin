@@ -1,4 +1,4 @@
-export const CustomObject = [
+export const customObject = [
   { h1: { type: 'label' } },
   { h3: { type: 'pluralLabel', label: 'Plural Label', separator: ' --> ' } },
   { h3: { type: 'fullName', label: 'Full Name', separator: ' --> ' } },
@@ -30,11 +30,11 @@ export const CustomObject = [
   { h2: 'List Views' },
   { ul: [{ type: 'listViews', elements: ['label', 'fullName', 'filterScope', 'columns'], separator: ' | ' }] },
   { h2: 'Fields' },
-  { table: { type: 'fields', headers: ["Label", "Full Name", "Type", "Reference To", "Required"], rows: ["label", "fullName", "type", "referenceTo", "required"] } }
+  { table: { type: 'fields', headers: ['Label', 'Full Name', 'Type', 'Reference To', 'Required'], rows: ['label', 'fullName', 'type', 'referenceTo', 'required'] } }
 ];
-//{ table: { headers: ["Label", "Full Name", "Type"], rows: [["label", "fullName", "type"]] } }
+// { table: { headers: ['Label', 'Full Name', 'Type'], rows: [['label', 'fullName', 'type']] } }
 /*
-{ table: { headers: ["a", "b"], rows: [{ a: "col1", b: "col2" }] } } or { table: { headers: ["a", "b"], rows: [["col1", "col2"]] } }
+{ table: { headers: ['a', 'b'], rows: [{ a: 'col1', b: 'col2' }] } } or { table: { headers: ['a', 'b'], rows: [['col1', 'col2']] } }
 */
 /*
 export const CustomObject = {
