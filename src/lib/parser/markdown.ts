@@ -51,12 +51,22 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
             console.log(md[element]);
             break;
           }
-          case 'p': {
-            //statements; 
-            break;
-          }
+          case 'p':
           case 'blockquote': {
-            //statements; 
+            if (Array.isArray(mdTag[element])) {
+              md[element] = [];
+              for (let item of mdTag[element]) {
+                md[element].push(
+                  typeof item == 'object'
+                    ? (item.label || '') + (item.separator || (item.label ? DEFAULT_SEPARATOR_LABEL : '')) + parsedmtd[item.type]
+                    : mdTag[element]
+                );
+              }
+            } else {
+              md[element] = typeof mdTag[element] == 'object'
+                ? (mdTag[element].label || '') + (mdTag[element].separator || (mdTag[element].label ? DEFAULT_SEPARATOR_LABEL : '')) + parsedmtd[mdTag[element].type]
+                : mdTag[element];
+            }
             break;
           }
           case 'img': {

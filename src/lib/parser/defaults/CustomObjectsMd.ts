@@ -4,6 +4,21 @@ export const CustomObject = [
   { h3: { type: 'fullName', label: 'Full Name', separator: ' --> ' } },
   { h3: { type: 'visibility', label: 'Visibility' } },
   { hr: '' },
+  { p: { type: 'pluralLabel', label: 'Plural Label', separator: ' = ' } },
+  {
+    p: [
+      { type: 'pluralLabel', label: 'Plural Label', separator: ' =>> ' },
+      { type: 'fullName', label: 'Full Name', separator: ' =>> ' }
+    ]
+  },
+  { hr: '' },
+  { blockquote: { type: 'pluralLabel', label: 'Plural Label', separator: ' = ' } },
+  {
+    blockquote: [
+      { type: 'pluralLabel', label: 'Plural Label', separator: ' =>> ' },
+      { type: 'fullName', label: 'Full Name', separator: ' =>> ' }
+    ]
+  },
   { h2: 'Attributes' },
   {
     ul: [
