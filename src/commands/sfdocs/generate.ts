@@ -67,6 +67,10 @@ export default class Generate extends SfdxCommand {
       const packageSourcePath = `${namedPackageDir.path}/main/default`;
       this.ux.startSpinner(`Parsing ${namedPackageDir.name}`);
       for (const typeInfoDefinition in typeInfos.typeDefs) {
+        if (!typeInfos.typeDefs.hasOwnProperty(typeInfoDefinition)) {
+          continue;
+        }
+
         const mtd: MetadataTypeInfo = typeInfos.typeDefs[typeInfoDefinition];
         if (
           !fs.existsSync(`${packageSourcePath}/${mtd.defaultDirectory}`) ||
@@ -197,6 +201,8 @@ export default class Generate extends SfdxCommand {
               `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.json`,
               mtdParsed
             );
+            console.log('HERE!');
+            console.log(mtdParsed);
             const mdparsedcontent = await jsonToMarkdown(mtdParsed);
             await fs.writeFile(
               `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.md`,
@@ -219,6 +225,6 @@ export default class Generate extends SfdxCommand {
 
     return this.project
       .getUniquePackageDirectories()
-      .filter((element) => this.flags.packages.includes(element.name));
+      .filter(element => this.flags.packages.includes(element.name));
   }
 }
