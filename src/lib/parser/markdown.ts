@@ -1,5 +1,6 @@
 /**
- * TODO: define here functionality
+ * TODO: añadir code, img y title
+ * TODO: Guía de estructura de por defectos
  */
 import { AnyJson } from '@salesforce/ts-types';
 import json2md = require('json2md');
@@ -47,7 +48,7 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
             md[element] = typeof mdTag[element] === 'object'
               ? (mdTag[element].label || '') + (mdTag[element].separator || (mdTag[element].label ? DEFAULT_SEPARATOR_LABEL : '')) + parsedmtd[mdTag[element].type]
               : mdTag[element];
-            console.log(md[element]);
+            //console.log(md[element]);
             break;
           }
           case 'p':
@@ -69,7 +70,14 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
             break;
           }
           case 'img': {
-            // statements;
+            if (typeof mdTag[element] === 'object' && mdTag[element].type != null && parsedmtd[mdTag[element].type] != null) {
+              md[element] = { source: parsedmtd[mdTag[element].type], title: mdTag[element].label, alt: mdTag[element].alt };
+            } else {
+              if (mdTag[element].source != null) {
+                md[element] = { source: mdTag[element].source, title: mdTag[element].label, alt: mdTag[element].alt };
+              }
+            }
+            //console.log(md[element]);
             break;
           }
           case 'ul':
@@ -112,7 +120,14 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
             break;
           }
           case 'code': {
-            // statements;
+            if (typeof mdTag[element] === 'object' && mdTag[element].type != null && parsedmtd[mdTag[element].type] != null) {
+              md[element] = { content: parsedmtd[mdTag[element].type], language: mdTag[element].language };
+            } else {
+              if (mdTag[element].content != null && mdTag[element].language != null) {
+                md[element] = { content: mdTag[element].content, language: mdTag[element].language };
+              }
+            }
+            //console.log(md[element]);
             break;
           }
           case 'table': {
@@ -123,7 +138,7 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
                 for (const attr of mdTag[element].rows) {
                   columns.push(li[attr] != null ? String(li[attr]) : ' ');
                 }
-                console.log(columns);
+                //console.log(columns);
                 md[element].rows.push(columns);
               }
             } else {
@@ -136,7 +151,7 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
             break;
           }
         }
-        if (md != null) toMd.push(md);
+        if (md != null && Object.keys(md).length > 0) toMd.push(md);
       }
     }
   }

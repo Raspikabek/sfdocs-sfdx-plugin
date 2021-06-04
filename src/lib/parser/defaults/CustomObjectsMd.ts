@@ -30,32 +30,10 @@ export const customObject = [
   { h2: 'List Views' },
   { ul: [{ type: 'listViews', elements: ['label', 'fullName', 'filterScope', 'columns'], separator: ' | ' }] },
   { h2: 'Fields' },
-  { table: { type: 'fields', headers: ['Label', 'Full Name', 'Type', 'Reference To', 'Required'], rows: ['label', 'fullName', 'type', 'referenceTo', 'required'] } }
+  { table: { type: 'fields', headers: ['Label', 'Full Name', 'Type', 'Reference To', 'Required'], rows: ['label', 'fullName', 'type', 'referenceTo', 'required'] } },
+  { code: { type: 'pluralLabel', language: 'html' } },
+  { code: { language: 'html', content: '' } },
+  { img: { type: 'pluralLabel', label: 'My image title', alt: 'My image alt' } },
+  { img: { source: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.elconfidencial.com%2Falma-corazon-vida%2F2020-11-17%2Fcomo-me-converti-meme-disaster-girl-viral_2835535%2F&psig=AOvVaw1X5EgXiqc2Q1Fo5aB32Lq6&ust=1621721830094000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCJCr8OTm2_ACFQAAAAAdAAAAABAD', label: 'My image title', alt: 'My image alt' } },
+  { title: { type: 'pluralLabel', label: 'Plural Label' } }
 ];
-// { table: { headers: ['Label', 'Full Name', 'Type'], rows: [['label', 'fullName', 'type']] } }
-/*
-{ table: { headers: ['a', 'b'], rows: [{ a: 'col1', b: 'col2' }] } } or { table: { headers: ['a', 'b'], rows: [['col1', 'col2']] } }
-*/
-/*
-export const CustomObject = {
-  section: [
-    {
-      title: 'Atributos',
-      elements: {
-        label: { mdTag: 'h1' },
-        pluralLabel: {
-          label: 'Plural Label', mdTag: 'h3'
-        }
-      }
-    },
-    {
-      title: { label: { mdTag: 'h1' } },
-      elements: {
-        pluralLabel: {
-          label: 'Plural Label', mdTag: 'h3'
-        }
-      }
-    }
-  ]
-};
-*/
