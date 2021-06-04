@@ -70,8 +70,8 @@ export default class Generate extends SfdxCommand {
         const mtd: MetadataTypeInfo = typeInfos.typeDefs[typeInfoDefinition];
         if (
           !fs.existsSync(`${packageSourcePath}/${mtd.defaultDirectory}`) ||
-          this.flags.ignoretypes.includes(mtd.defaultDirectory) ||
-          this.flags.ignoretypes.includes(mtd.metadataName)
+          this.flags.ignoretypes?.includes(mtd.defaultDirectory) ||
+          this.flags.ignoretypes?.includes(mtd.metadataName)
         ) {
           continue;
         }
