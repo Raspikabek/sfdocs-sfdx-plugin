@@ -1,7 +1,8 @@
 import { AnyJson } from '@salesforce/ts-types';
 import json2md = require('json2md');
-import { customObject } from '../../lib/parser/defaults/CustomObjectsMd';
+//import { customObject } from '../../lib/parser/defaults/CustomObjectsMd';
 import { MarkdownTag } from '../../lib/parser/markdownInterfaces';
+import { templates } from '../../lib/parser/templates';
 
 enum SUPPORTED_ELEMENTS {
   h1,
@@ -21,6 +22,10 @@ enum SUPPORTED_ELEMENTS {
   title
 }
 
+enum SUPPORTED_METADATA {
+  CustomObject
+}
+
 const DEFAULT_SEPARATOR_LABEL = ': ';
 const DEFAULT_SEPARATOR_LIST = ' | ';
 
@@ -30,166 +35,153 @@ export const jsonToMarkdown = async (
 ): Promise<string> => {
   const toMd = [];
   let md;
-  for (const mdTag of customObject as Array<MarkdownTag>) {
-    for (const element in mdTag) {
-      if ((element as string) in SUPPORTED_ELEMENTS) {
-        md = {};
-        switch (element) {
-          case 'h1':
-          case 'h2':
-          case 'h3':
-          case 'h4':
-          case 'h5':
-          case 'h6': {
-            /*md[element] = typeof mdTag[element] === 'object'
-              ? (mdTag[element].label || '') + (mdTag[element].separator || (mdTag[element].label ? DEFAULT_SEPARATOR_LABEL : '')) + parsedmtd[mdTag[element].type]
-              : mdTag[element];*/
-            md[element] = getMdElementContent(mdTag[element], parsedmtd);
-            break;
-          }
-          case 'p':
-          case 'blockquote': {
-            md[element] = getMdElementContent(mdTag[element], parsedmtd);
-            /*if (Array.isArray(mdTag[element]) && mdTag[element].length > 0) {
-              md[element] = [];
-              for (const item of mdTag[element] as []) {
-                md[element].push(
-                  typeof item === 'object'
-                    ? (item.label || '') + (item.separator || (item.label ? DEFAULT_SEPARATOR_LABEL : '')) + parsedmtd[item.type]
-                    : mdTag[element]
-                );
-              }
-            } else {
+  if (metadataname in SUPPORTED_METADATA) {
+    for (const mdTag of templates[metadataname] as Array<MarkdownTag>) {
+      for (const element in mdTag) {
+        if ((element as string) in SUPPORTED_ELEMENTS) {
+          md = {};
+          switch (element) {
+            case 'h1':
+            case 'h2':
+            case 'h3':
+            case 'h4':
+            case 'h5':
+            case 'h6': {
               md[element] = getMdElementContent(mdTag[element], parsedmtd);
-            }*/
-            break;
-          }
-          case 'img': {
-            if (
-              typeof mdTag[element] === 'object' &&
-              mdTag[element].type != null &&
-              parsedmtd[mdTag[element].type] != null
-            ) {
-              md[element] = {
-                source: parsedmtd[mdTag[element].type],
-                title: mdTag[element].label,
-                alt: mdTag[element].alt
-              };
-            } else {
-              if (mdTag[element].source != null) {
+              break;
+            }
+            case 'p':
+            case 'blockquote': {
+              md[element] = getMdElementContent(mdTag[element], parsedmtd);
+              break;
+            }
+            case 'img': {
+              if (
+                typeof mdTag[element] === 'object' &&
+                mdTag[element].type != null &&
+                parsedmtd[mdTag[element].type] != null
+              ) {
                 md[element] = {
-                  source: mdTag[element].source,
+                  source: parsedmtd[mdTag[element].type],
                   title: mdTag[element].label,
                   alt: mdTag[element].alt
                 };
+              } else {
+                if (mdTag[element].source != null) {
+                  md[element] = {
+                    source: mdTag[element].source,
+                    title: mdTag[element].label,
+                    alt: mdTag[element].alt
+                  };
+                }
               }
+              break;
             }
-            break;
-          }
-          case 'ul':
-          case 'ol': {
-            md[element] = [];
-            for (const li of mdTag[element]) {
-              if (typeof li === 'object') {
-                if (li.elements != null) {
-                  if (parsedmtd[li.type]) {
-                    const values = [];
-                    if (Array.isArray(parsedmtd[li.type])) {
-                      for (const li2 of parsedmtd[li.type]) {
-                        const v = [];
-                        for (const e of li.elements) {
-                          v.push(li2[e]);
+            case 'ul':
+            case 'ol': {
+              md[element] = [];
+              for (const li of mdTag[element]) {
+                if (typeof li === 'object') {
+                  if (li.elements != null) {
+                    if (parsedmtd[li.type]) {
+                      const values = [];
+                      if (Array.isArray(parsedmtd[li.type])) {
+                        for (const li2 of parsedmtd[li.type]) {
+                          const v = [];
+                          for (const e of li.elements) {
+                            v.push(li2[e]);
+                          }
+                          values.push(
+                            v.join(li.separator || DEFAULT_SEPARATOR_LIST)
+                          );
                         }
-                        values.push(
-                          v.join(li.separator || DEFAULT_SEPARATOR_LIST)
-                        );
+                      } else {
+                        for (const e of li.elements) {
+                          values.push(parsedmtd[li.type][e]);
+                        }
                       }
-                    } else {
-                      for (const e of li.elements) {
-                        values.push(parsedmtd[li.type][e]);
-                      }
+                      md[element].push(values);
                     }
-                    md[element].push(values);
-                  }
-                } else {
-                  md[element].push(
-                    (li.label || '') +
+                  } else {
+                    md[element].push(
+                      (li.label || '') +
                       (li.separator ||
                         (li.label ? DEFAULT_SEPARATOR_LABEL : '')) +
                       parsedmtd[li.type]
-                  );
+                    );
+                  }
+                } else {
+                  md[element].push(li);
                 }
-              } else {
-                md[element].push(li);
               }
+              if (Array.isArray(md[element]) && !md[element].length) {
+                md = null;
+              }
+              break;
             }
-            if (Array.isArray(md[element]) && !md[element].length) {
-              md = null;
+            case 'hr': {
+              md[element] = '';
+              break;
             }
-            break;
-          }
-          case 'hr': {
-            md[element] = '';
-            break;
-          }
-          case 'code': {
-            if (
-              typeof mdTag[element] === 'object' &&
-              mdTag[element].type != null &&
-              parsedmtd[mdTag[element].type] != null
-            ) {
-              md[element] = {
-                content: parsedmtd[mdTag[element].type],
-                language: mdTag[element].language
-              };
-            } else {
+            case 'code': {
               if (
-                mdTag[element].content != null &&
-                mdTag[element].language != null
+                typeof mdTag[element] === 'object' &&
+                mdTag[element].type != null &&
+                parsedmtd[mdTag[element].type] != null
               ) {
                 md[element] = {
-                  content: mdTag[element].content,
+                  content: parsedmtd[mdTag[element].type],
                   language: mdTag[element].language
                 };
-              }
-            }
-            break;
-          }
-          case 'table': {
-            if (
-              typeof mdTag[element] === 'object' &&
-              mdTag[element].type &&
-              parsedmtd[mdTag[element].type]
-            ) {
-              md[element] = { headers: mdTag[element].headers, rows: [] };
-              for (const li of parsedmtd[mdTag[element].type]) {
-                const columns = [];
-                for (const attr of mdTag[element].rows) {
-                  columns.push(li[attr] != null ? String(li[attr]) : ' ');
+              } else {
+                if (
+                  mdTag[element].content != null &&
+                  mdTag[element].language != null
+                ) {
+                  md[element] = {
+                    content: mdTag[element].content,
+                    language: mdTag[element].language
+                  };
                 }
-                md[element].rows.push(columns);
               }
-            } else {
-              md = null;
+              break;
             }
-            break;
-          }
-          case 'link': {
-            if (
-              typeof mdTag[element] === 'object' &&
-              mdTag[element].type != null &&
-              parsedmtd[mdTag[element].type] != null &&
-              mdTag[element].label != null
-            ) {
-              md[element] = {
-                title: mdTag[element].label,
-                source: parsedmtd[mdTag[element].type]
-              };
+            case 'table': {
+              if (
+                typeof mdTag[element] === 'object' &&
+                mdTag[element].type &&
+                parsedmtd[mdTag[element].type]
+              ) {
+                md[element] = { headers: mdTag[element].headers, rows: [] };
+                for (const li of parsedmtd[mdTag[element].type]) {
+                  const columns = [];
+                  for (const attr of mdTag[element].rows) {
+                    columns.push(li[attr] != null ? String(li[attr]) : ' ');
+                  }
+                  md[element].rows.push(columns);
+                }
+              } else {
+                md = null;
+              }
+              break;
             }
-            break;
+            case 'link': {
+              if (
+                typeof mdTag[element] === 'object' &&
+                mdTag[element].type != null &&
+                parsedmtd[mdTag[element].type] != null &&
+                mdTag[element].label != null
+              ) {
+                md[element] = {
+                  title: mdTag[element].label,
+                  source: parsedmtd[mdTag[element].type]
+                };
+              }
+              break;
+            }
           }
+          if (md != null && Object.keys(md).length > 0) toMd.push(md);
         }
-        if (md != null && Object.keys(md).length > 0) toMd.push(md);
       }
     }
   }
@@ -219,10 +211,10 @@ export const jsonToMarkdown = async (
   }*/
 };
 
-function getMdElementContent(tag: any, parse: any): number {
+function getMdElementContent(tag: any, parse: any): string {
   return typeof tag === 'object'
     ? (tag.label || '') +
-        (tag.separator || (tag.label ? DEFAULT_SEPARATOR_LABEL : '')) +
-        parse[tag.type]
+    (tag.separator || (tag.label ? DEFAULT_SEPARATOR_LABEL : '')) +
+    parse[tag.type]
     : tag;
 }
