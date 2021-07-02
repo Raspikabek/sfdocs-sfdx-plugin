@@ -1,11 +1,7 @@
-/**
- * TODO: añadir code, img y title
- * TODO: Guía de estructura de por defectos
- * TODO: Interface de tags
- */
 import { AnyJson } from '@salesforce/ts-types';
 import json2md = require('json2md');
 import { customObject } from '../../lib/parser/defaults/CustomObjectsMd';
+import { MarkdownTag } from '../../lib/parser/markdownInterfaces';
 
 enum SUPPORTED_ELEMENTS {
   h1,
@@ -34,7 +30,7 @@ export const jsonToMarkdown = async (
 ): Promise<string> => {
   const toMd = [];
   let md;
-  for (const mdTag of customObject) {
+  for (const mdTag of customObject as Array<MarkdownTag>) {
     for (const element in mdTag) {
       if ((element as string) in SUPPORTED_ELEMENTS) {
         md = {};
