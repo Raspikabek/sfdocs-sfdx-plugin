@@ -45,6 +45,9 @@ Refer to the [Metadata Types documentation](https://developer.salesforce.com/doc
 * [sfdocs-sfdx-plugin](#sfdocs-sfdx-plugin)
 * [Debugging your plugin](#debugging-your-plugin)
 <!-- tocstop -->
+* [sfdocs-sfdx-plugin](#sfdocs-sfdx-plugin)
+* [Debugging your plugin](#debugging-your-plugin)
+<!-- tocstop -->
   <!-- install -->
 
 ```sh-session
@@ -52,6 +55,18 @@ $ sfdx plugins:install sfdocs-sfdx-plugin
 ```
 
 <!-- usage -->
+```sh-session
+$ npm install -g sfdocs-sfdx-plugin
+$ sfdx COMMAND
+running command...
+$ sfdx (-v|--version|version)
+sfdocs-sfdx-plugin/0.1.0 win32-x64 node-v12.14.1
+$ sfdx --help [COMMAND]
+USAGE
+  $ sfdx COMMAND
+...
+```
+<!-- usagestop -->
 ```sh-session
 $ npm install -g sfdocs-sfdx-plugin
 $ sfdx COMMAND
@@ -65,6 +80,50 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
+* [`sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--reset] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-sfdocsgenerate--d-filepath--r-markdownjson--p-array--i-array---reset---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+
+## `sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--reset] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+generates documentation
+
+```
+generates documentation
+
+USAGE
+  $ sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--reset] [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -d, --outputdir=outputdir                                                         [default: docs] directory to store
+                                                                                    the documentation files
+
+  -i, --ignoretypes=ignoretypes                                                     list of metadata type infos to
+                                                                                    ignore. valid values are metadata
+                                                                                    type info names or folder names
+                                                                                    (CustomApplication or applications,
+                                                                                    CustomObject or objects)
+
+  -p, --packages=packages                                                           list of package names to generate
+                                                                                    documentation, leave it empty to
+                                                                                    generate from all existing packages
+
+  -r, --resultformat=(markdown|json)                                                [default: markdown] result format
+                                                                                    stored in the outputdir; --json flag
+                                                                                    overrides this parameter
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+  --reset                                                                           remove existing target docs folder
+
+EXAMPLE
+  $ sfdx sfdocs:generate --resultformat markdown --outputdir site
+```
+
+_See code: [lib/commands/sfdocs/generate.js](https://github.com/raspikabek/sfdocs-sfdx-plugin/blob/v0.1.0/lib/commands/sfdocs/generate.js)_
+<!-- commandsstop -->
 * [`sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--reset] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-sfdocsgenerate--d-filepath--r-markdownjson--p-array--i-array---reset---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
 ## `sfdx sfdocs:generate [-d <filepath>] [-r markdown|json] [-p <array>] [-i <array>] [--reset] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
