@@ -1,6 +1,7 @@
 /**
  * TODO: añadir code, img y title
  * TODO: Guía de estructura de por defectos
+ * TODO: Interface de tags
  */
 import { AnyJson } from '@salesforce/ts-types';
 import json2md = require('json2md');
@@ -27,10 +28,6 @@ enum SUPPORTED_ELEMENTS {
 const DEFAULT_SEPARATOR_LABEL = ': ';
 const DEFAULT_SEPARATOR_LIST = ' | ';
 
-/*json2md.converters.sayHello = function (input, json2md) {
-  return "Hello " + input + "!";
-}*/
-
 export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
   const toMd = [];
   let md;
@@ -45,17 +42,18 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
           case 'h4':
           case 'h5':
           case 'h6': {
-            md[element] = typeof mdTag[element] === 'object'
+            /*md[element] = typeof mdTag[element] === 'object'
               ? (mdTag[element].label || '') + (mdTag[element].separator || (mdTag[element].label ? DEFAULT_SEPARATOR_LABEL : '')) + parsedmtd[mdTag[element].type]
-              : mdTag[element];
-            //console.log(md[element]);
+              : mdTag[element];*/
+            md[element] = getMdElementContent(mdTag[element], parsedmtd);
             break;
           }
           case 'p':
           case 'blockquote': {
-            if (Array.isArray(mdTag[element]) && mdTag[element].length > 0) {
+            md[element] = getMdElementContent(mdTag[element], parsedmtd);
+            /*if (Array.isArray(mdTag[element]) && mdTag[element].length > 0) {
               md[element] = [];
-              for (const item of mdTag[element]) {
+              for (const item of mdTag[element] as []) {
                 md[element].push(
                   typeof item === 'object'
                     ? (item.label || '') + (item.separator || (item.label ? DEFAULT_SEPARATOR_LABEL : '')) + parsedmtd[item.type]
@@ -63,10 +61,8 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
                 );
               }
             } else {
-              md[element] = typeof mdTag[element] === 'object'
-                ? (mdTag[element].label || '') + (mdTag[element].separator || (mdTag[element].label ? DEFAULT_SEPARATOR_LABEL : '')) + parsedmtd[mdTag[element].type]
-                : mdTag[element];
-            }
+              md[element] = getMdElementContent(mdTag[element], parsedmtd);
+            }*/
             break;
           }
           case 'img': {
@@ -77,7 +73,6 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
                 md[element] = { source: mdTag[element].source, title: mdTag[element].label, alt: mdTag[element].alt };
               }
             }
-            //console.log(md[element]);
             break;
           }
           case 'ul':
@@ -127,7 +122,6 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
                 md[element] = { content: mdTag[element].content, language: mdTag[element].language };
               }
             }
-            //console.log(md[element]);
             break;
           }
           case 'table': {
@@ -138,7 +132,6 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
                 for (const attr of mdTag[element].rows) {
                   columns.push(li[attr] != null ? String(li[attr]) : ' ');
                 }
-                //console.log(columns);
                 md[element].rows.push(columns);
               }
             } else {
@@ -146,8 +139,10 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
             }
             break;
           }
-          case 'title': {
-            // statements;
+          case 'link': {
+            if (typeof mdTag[element] === 'object' && mdTag[element].type != null && parsedmtd[mdTag[element].type] != null && mdTag[element].label != null) {
+              md[element] = { title: mdTag[element].label, source: parsedmtd[mdTag[element].type] };
+            }
             break;
           }
         }
@@ -155,7 +150,6 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
       }
     }
   }
-  console.log(toMd);
   return json2md(toMd);
   /**
    * [
@@ -176,4 +170,14 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
    * { title: 'hello', source: 'https://ionicabizau.net' }
    * ]
    */
+
+  /*json2md.converters.sayHello = function (input, json2md) {
+    return "Hello " + input + "!";
+  }*/
 };
+
+function getMdElementContent(tag: any, parse: any): number {
+  return typeof tag === 'object'
+    ? (tag.label || '') + (tag.separator || (tag.label ? DEFAULT_SEPARATOR_LABEL : '')) + parse[tag.type]
+    : tag;
+}
