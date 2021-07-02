@@ -28,7 +28,10 @@ enum SUPPORTED_ELEMENTS {
 const DEFAULT_SEPARATOR_LABEL = ': ';
 const DEFAULT_SEPARATOR_LIST = ' | ';
 
-export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
+export const jsonToMarkdown = async (
+  parsedmtd: AnyJson,
+  metadataname: string
+): Promise<string> => {
   const toMd = [];
   let md;
   for (const mdTag of customObject) {
@@ -66,11 +69,23 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
             break;
           }
           case 'img': {
-            if (typeof mdTag[element] === 'object' && mdTag[element].type != null && parsedmtd[mdTag[element].type] != null) {
-              md[element] = { source: parsedmtd[mdTag[element].type], title: mdTag[element].label, alt: mdTag[element].alt };
+            if (
+              typeof mdTag[element] === 'object' &&
+              mdTag[element].type != null &&
+              parsedmtd[mdTag[element].type] != null
+            ) {
+              md[element] = {
+                source: parsedmtd[mdTag[element].type],
+                title: mdTag[element].label,
+                alt: mdTag[element].alt
+              };
             } else {
               if (mdTag[element].source != null) {
-                md[element] = { source: mdTag[element].source, title: mdTag[element].label, alt: mdTag[element].alt };
+                md[element] = {
+                  source: mdTag[element].source,
+                  title: mdTag[element].label,
+                  alt: mdTag[element].alt
+                };
               }
             }
             break;
@@ -89,7 +104,9 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
                         for (const e of li.elements) {
                           v.push(li2[e]);
                         }
-                        values.push(v.join(li.separator || DEFAULT_SEPARATOR_LIST));
+                        values.push(
+                          v.join(li.separator || DEFAULT_SEPARATOR_LIST)
+                        );
                       }
                     } else {
                       for (const e of li.elements) {
@@ -99,7 +116,12 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
                     md[element].push(values);
                   }
                 } else {
-                  md[element].push((li.label || '') + (li.separator || (li.label ? DEFAULT_SEPARATOR_LABEL : '')) + parsedmtd[li.type]);
+                  md[element].push(
+                    (li.label || '') +
+                      (li.separator ||
+                        (li.label ? DEFAULT_SEPARATOR_LABEL : '')) +
+                      parsedmtd[li.type]
+                  );
                 }
               } else {
                 md[element].push(li);
@@ -115,17 +137,34 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
             break;
           }
           case 'code': {
-            if (typeof mdTag[element] === 'object' && mdTag[element].type != null && parsedmtd[mdTag[element].type] != null) {
-              md[element] = { content: parsedmtd[mdTag[element].type], language: mdTag[element].language };
+            if (
+              typeof mdTag[element] === 'object' &&
+              mdTag[element].type != null &&
+              parsedmtd[mdTag[element].type] != null
+            ) {
+              md[element] = {
+                content: parsedmtd[mdTag[element].type],
+                language: mdTag[element].language
+              };
             } else {
-              if (mdTag[element].content != null && mdTag[element].language != null) {
-                md[element] = { content: mdTag[element].content, language: mdTag[element].language };
+              if (
+                mdTag[element].content != null &&
+                mdTag[element].language != null
+              ) {
+                md[element] = {
+                  content: mdTag[element].content,
+                  language: mdTag[element].language
+                };
               }
             }
             break;
           }
           case 'table': {
-            if (typeof mdTag[element] === 'object' && mdTag[element].type && parsedmtd[mdTag[element].type]) {
+            if (
+              typeof mdTag[element] === 'object' &&
+              mdTag[element].type &&
+              parsedmtd[mdTag[element].type]
+            ) {
               md[element] = { headers: mdTag[element].headers, rows: [] };
               for (const li of parsedmtd[mdTag[element].type]) {
                 const columns = [];
@@ -140,8 +179,16 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
             break;
           }
           case 'link': {
-            if (typeof mdTag[element] === 'object' && mdTag[element].type != null && parsedmtd[mdTag[element].type] != null && mdTag[element].label != null) {
-              md[element] = { title: mdTag[element].label, source: parsedmtd[mdTag[element].type] };
+            if (
+              typeof mdTag[element] === 'object' &&
+              mdTag[element].type != null &&
+              parsedmtd[mdTag[element].type] != null &&
+              mdTag[element].label != null
+            ) {
+              md[element] = {
+                title: mdTag[element].label,
+                source: parsedmtd[mdTag[element].type]
+              };
             }
             break;
           }
@@ -178,6 +225,8 @@ export const jsonToMarkdown = async (parsedmtd: AnyJson): Promise<string> => {
 
 function getMdElementContent(tag: any, parse: any): number {
   return typeof tag === 'object'
-    ? (tag.label || '') + (tag.separator || (tag.label ? DEFAULT_SEPARATOR_LABEL : '')) + parse[tag.type]
+    ? (tag.label || '') +
+        (tag.separator || (tag.label ? DEFAULT_SEPARATOR_LABEL : '')) +
+        parse[tag.type]
     : tag;
 }

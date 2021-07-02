@@ -161,7 +161,10 @@ export default class Generate extends SfdxCommand {
               `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.json`,
               mtdParsed
             );
-            const mdparsedcontent = await jsonToMarkdown(mtdParsed);
+            const mdparsedcontent = await jsonToMarkdown(
+              mtdParsed,
+              mtd.metadataName
+            );
             await fs.writeFile(
               `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.md`,
               mdparsedcontent
@@ -201,9 +204,10 @@ export default class Generate extends SfdxCommand {
               `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.json`,
               mtdParsed
             );
-            console.log('HERE!');
-            console.log(mtdParsed);
-            const mdparsedcontent = await jsonToMarkdown(mtdParsed);
+            const mdparsedcontent = await jsonToMarkdown(
+              mtdParsed,
+              mtd.metadataName
+            );
             await fs.writeFile(
               `${this.flags.outputdir}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.md`,
               mdparsedcontent
