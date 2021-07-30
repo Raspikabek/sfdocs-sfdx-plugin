@@ -14,7 +14,7 @@ export interface MarkdownTag {
     code?: MarkdownObject;
     table?: MarkdownObject;
     link?: MarkdownObject;
-    //[key: string]: string | MarkdownObject | MarkdownObject[];
+    // [key: string]: string | MarkdownObject | MarkdownObject[];
 }
 export interface MarkdownObject {
     type?: string;
