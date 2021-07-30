@@ -1,8 +1,8 @@
 import { AnyJson } from '@salesforce/ts-types';
 import json2md = require('json2md');
-//import { customObject } from '../../lib/parser/defaults/CustomObjectsMd';
-import { MarkdownTag } from '../../lib/parser/markdownInterfaces';
-import { templates } from '../../lib/parser/templates';
+import { MarkdownTag } from './markdownInterfaces';
+import { MarkdownObject } from './markdownInterfaces';
+import { templates } from './templates';
 
 enum SUPPORTED_ELEMENTS {
   h1,
@@ -22,10 +22,6 @@ enum SUPPORTED_ELEMENTS {
   title
 }
 
-enum SUPPORTED_METADATA {
-  CustomObject
-}
-
 const DEFAULT_SEPARATOR_LABEL = ': ';
 const DEFAULT_SEPARATOR_LIST = ' | ';
 
@@ -35,8 +31,8 @@ export const jsonToMarkdown = async (
 ): Promise<string> => {
   const toMd = [];
   let md;
-  if (metadataname in SUPPORTED_METADATA) {
-    for (const mdTag of templates[metadataname] as Array<MarkdownTag>) {
+  if (metadataname in templates) {
+    for (const mdTag of templates[metadataname] as MarkdownTag[]) {
       for (const element in mdTag) {
         if ((element as string) in SUPPORTED_ELEMENTS) {
           md = {};
@@ -211,7 +207,7 @@ export const jsonToMarkdown = async (
   }*/
 };
 
-function getMdElementContent(tag: any, parse: any): string {
+function getMdElementContent(tag: string | MarkdownObject, parse: AnyJson): string {
   return typeof tag === 'object'
     ? (tag.label || '') +
     (tag.separator || (tag.label ? DEFAULT_SEPARATOR_LABEL : '')) +
