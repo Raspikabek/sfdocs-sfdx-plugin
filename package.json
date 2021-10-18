@@ -42,7 +42,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/raspikabek/sfdocs-sfdx-plugin",
+  "homepage": "https://sfdocs.netlify.app",
   "keywords": [
     "sfdx-plugin"
   ],
