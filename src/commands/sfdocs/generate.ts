@@ -15,14 +15,14 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    outputdir: Flags.directory({
+    'output-dir': Flags.directory({
       char: 'd',
       summary: messages.getMessage('flags.outputdir.summary'),
       description: messages.getMessage('flags.outputdir.description'),
       default: 'docs',
     }),
     format: Flags.string({
-      char: 'r',
+      char: 'f',
       summary: messages.getMessage('flags.format.summary'),
       options: ['json', 'markdown'],
       default: 'json',
@@ -33,7 +33,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
       description: messages.getMessage('flags.package.description'),
       multiple: true,
     }),
-    ignoretype: Flags.string({
+    'ignore-type': Flags.string({
       char: 'i',
       summary: messages.getMessage('flags.ignoretype.summary'),
       description: messages.getMessage('flags.ignoretype.description'),
@@ -46,9 +46,9 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
 
   public async run(): Promise<DocsGenerateResult> {
     const { flags } = await this.parse(Generate);
-    this.log(messages.getMessage('info.generate', [flags.outputdir, flags.format]));
+    this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
-      outputdir: flags.outputdir,
+      outputdir: flags['output-dir'],
       format: flags.format,
     };
   }

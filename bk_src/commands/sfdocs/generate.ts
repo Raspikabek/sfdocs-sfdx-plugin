@@ -23,7 +23,7 @@ const xmlParserOptions = {
 export default class Generate extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
-  public static examples = ['$ sfdx sfdocs:generate --resultformat markdown --outputdir site'];
+  public static examples = ['$ sfdx sfdocs:generate --resultformat markdown --output-dir site'];
 
   protected static flagsConfig = {
     outputdir: flags.filepath({

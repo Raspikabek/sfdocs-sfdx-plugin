@@ -37,7 +37,7 @@ describe('Generate Docs', () => {
 
   test
     .stdout()
-    .command(['sfdocs:generate', '--outputdir', 'alternative-dir', '--json'])
+    .command(['sfdocs:generate', '--output-dir', 'alternative-dir', '--json'])
     .it('runs generate --format markdown --json', (ctx) => {
       const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
       expect(result.outputdir).to.equal('alternative-dir');
