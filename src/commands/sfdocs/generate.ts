@@ -6,6 +6,7 @@ const messages = Messages.loadMessages('sfdocs-sfdx-plugin', 'sfdocs.generate');
 
 export type DocsGenerateResult = {
   outputdir: string;
+  format: string;
 };
 
 export default class Generate extends SfCommand<DocsGenerateResult> {
@@ -48,6 +49,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     this.log(messages.getMessage('info.generate', [flags.outputdir, flags.format]));
     return {
       outputdir: flags.outputdir,
+      format: flags.format,
     };
   }
 }
