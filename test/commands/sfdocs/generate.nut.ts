@@ -8,7 +8,10 @@ let error: boolean;
 
 describe('sfdocs generate NUTs', () => {
   before('prepare session', async () => {
-    testSession = await TestSession.create();
+    testSession = await TestSession.create({
+      devhubAuthStrategy: 'AUTO',
+      project: { name: 'testProject' },
+    });
   });
 
   after(async () => {
@@ -29,8 +32,8 @@ describe('sfdocs generate NUTs', () => {
   });
 
   it('should generate docs with reset option and not contain previous files', () => {
-    fs.mkdirSync('docs/sample-app/objects', { recursive: true });
-    fs.writeFileSync('docs/sample-app/objects/CustomObject.json', '{test: true}');
+    fs.mkdirSync('docs/force-app/objects', { recursive: true });
+    fs.writeFileSync('docs/force-app/objects/CustomObject.json', '{test: true}');
 
     const { result } = execCmd<DocsGenerateResult>('sfdocs generate --reset --json', {
       ensureExitCode: 0,
