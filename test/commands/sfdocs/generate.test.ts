@@ -42,4 +42,6 @@ describe('Generate Docs', () => {
       const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
       expect(result.outputdir).to.equal('alternative-dir');
     });
+
+  test.stdout();
 });

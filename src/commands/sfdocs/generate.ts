@@ -1,5 +1,6 @@
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
+import * as fs from 'graceful-fs';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('sfdocs-sfdx-plugin', 'sfdocs.generate');
@@ -46,6 +47,11 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
 
   public async run(): Promise<DocsGenerateResult> {
     const { flags } = await this.parse(Generate);
+
+    if (flags.reset && fs.existsSync(flags['output-dir'])) {
+      fs.rmSync(flags['output-dir'], { recursive: true });
+    }
+
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
       outputdir: flags['output-dir'],
