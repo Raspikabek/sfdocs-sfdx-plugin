@@ -8,14 +8,14 @@ const messages = Messages.loadMessages('sfdocs-sfdx-plugin', 'sfdocs.generate');
 export type DocsGenerateResult = {
   outputdir: string;
   format: string;
+  packages: NamedPackageDir[];
 };
 
 export default class Generate extends SfCommand<DocsGenerateResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
-  // TODO: it should requireproject, but still have to figure out how to create test class within project context
-  // public static readonly requiresProject = true;
+  public static readonly requiresProject = true;
 
   public static readonly flags = {
     'output-dir': Flags.directory({
@@ -55,11 +55,12 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     }
 
     // const toReturn = {};
-    // await this.getProjectPackages();
+    const pkgs = await this.getProjectPackages();
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
       outputdir: flags['output-dir'],
       format: flags.format,
+      packages: pkgs,
     };
   }
 
