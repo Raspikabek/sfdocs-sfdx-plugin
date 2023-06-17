@@ -1,5 +1,5 @@
-import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
-import { Messages } from '@salesforce/core';
+import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
+import { Messages, NamedPackageDir } from '@salesforce/core';
 import * as fs from 'graceful-fs';
 
 Messages.importMessagesDirectory(__dirname);
@@ -14,6 +14,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
+  public static readonly requiresProject = true;
 
   public static readonly flags = {
     'output-dir': Flags.directory({
@@ -52,10 +53,22 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
       fs.rmSync(flags['output-dir'], { recursive: true });
     }
 
+    // const toReturn = {};
+    await this.getProjectPackages();
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
       outputdir: flags['output-dir'],
       format: flags.format,
     };
+  }
+
+  private async getProjectPackages(): Promise<NamedPackageDir[]> {
+    const { flags } = await this.parse(Generate);
+
+    if (!flags.package?.length) {
+      return this.project.getUniquePackageDirectories();
+    }
+
+    return this.project.getUniquePackageDirectories().filter((element) => flags.package.includes(element.name));
   }
 }
