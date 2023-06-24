@@ -1,14 +1,15 @@
+import * as path from 'path';
 import { expect, test } from '@oclif/test';
 import { TestSession } from '@salesforce/cli-plugins-testkit';
 import { DocsGenerateResult } from '../../../src/commands/sfdocs/generate';
 
-let testSession: TestSession;
-
 describe('Generate Docs', () => {
+  let testSession: TestSession;
   before(async () => {
     testSession = await TestSession.create({
-      devhubAuthStrategy: 'AUTO',
-      project: { name: 'testProject' },
+      project: {
+        sourceDir: path.join(process.cwd(), 'test/MyTestProject'),
+      },
     });
   });
 
@@ -33,6 +34,7 @@ describe('Generate Docs', () => {
       expect(result.outputdir).to.equal('docs');
       expect(result.packages[0]['path']).to.equal('force-app');
       expect(result.packages[0]['default']).to.be.true;
+      expect(result.packages).to.have.lengthOf(2);
     });
 
   test
@@ -57,6 +59,7 @@ describe('Generate Docs', () => {
     .it('runs generate --format markdown --json', (ctx) => {
       const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
       expect(result.format).to.equal('markdown');
+      expect(result.packages).to.have.lengthOf(2);
     });
 
   test
@@ -65,6 +68,7 @@ describe('Generate Docs', () => {
     .it('runs generate --format markdown --json', (ctx) => {
       const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
       expect(result.outputdir).to.equal('alternative-dir');
+      expect(result.packages).to.have.lengthOf(2);
     });
 
   test
@@ -75,5 +79,26 @@ describe('Generate Docs', () => {
       expect(result.outputdir).to.equal('docs');
       expect(result.packages[0]['path']).to.equal('force-app');
       expect(result.packages[0]['default']).to.be.true;
+      expect(result.packages).to.have.lengthOf(1);
+    });
+
+  test
+    .stdout()
+    .command(['sfdocs:generate', '--package', 'force-second-app', '--json'])
+    .it('runs generate --package force-second-app --json', (ctx) => {
+      const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
+      expect(result.outputdir).to.equal('docs');
+      expect(result.packages[0]['path']).to.equal('force-second-app');
+      expect(result.packages[0]['default']).to.be.undefined;
+      expect(result.packages).to.have.lengthOf(1);
+    });
+
+  test
+    .stdout()
+    .command(['sfdocs:generate', '--package', 'non-existent-app', '--json'])
+    .it('runs generate --package non-existent-app --json', (ctx) => {
+      const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
+      expect(result.outputdir).to.equal('docs');
+      expect(result.packages).to.have.lengthOf(0);
     });
 });
