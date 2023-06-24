@@ -111,35 +111,86 @@ sf plugins
 
 <!-- commands -->
 
-- [`sf hello world`](#sf-hello-world)
+- [`sf sfdocs generate`](#sf-sfdocs-generate)
 
-## `sf hello world`
+## `sf sfdocs generate`
 
-Say hello either to the world or someone you know.
+Generates documentation of your project.
 
 ```
 USAGE
-  $ sf hello world [--json] [-n <value>]
+  $ sf sfdocs generate [--json] [-d <value>] [-f json|markdown] [-p <value>] [-i <value>] [--reset]
 
 FLAGS
-  -n, --name=<value>  [default: World] The name of the person you'd like to say hello to.
+  -d, --output-dir=<value>      [default: docs] Target directory to store the output documentation files
+  -f, --format=<option>         [default: json] The result format stored in the output directory.
+                                <options: json|markdown>
+  -i, --ignore-type=<value>...  List of metadata types to ignore. Valid values are Metadata Type Info names or folder
+                                names. Example: (CustomApplication or application, CustomObject or objects)
+  -p, --package=<value>...      Name of the package to generate the documentation from. Allows multiple packages. Leave
+                                it empty to generate documentation from all existing packages in your sfdx-project.json
+                                file
+  --reset                       Removes the existing target docs folder.
 
 GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Say hello either to the world or someone you know.
+  Generates documentation of your project.
 
-  Say hello either to the world or someone you know.
+  Generates documentation under a folder in a particular format based on your project local metadata.
 
 EXAMPLES
-  Say hello to the world:
+  - Generate documentation from all packages in your local project
+    sf sfdocs generate
+  - Generate documentation from one package in your local project
+    sf sfdocs generate --packages force-app
+  - Generate documentation without CustomObjects
+  $ sf sfdocs generate --ignoretypes objects
 
-    $ sf hello world
+FLAG DESCRIPTIONS
+  -d, --output-dir=<value>  Target directory to store the output documentation files
 
-  Say hello to someone you know:
+    The target directory will create a folder package within your project and inside the appropriate Metadata Type
+    structure. Example:
 
-    $ sf hello world --name Astro
+    sf sfdocs generate -d docs -p force-app -p labels-app
+
+    Output:
+    docs/
+    ..force-app/
+    ..../objects/
+    ....../Account.md
+    ....../Contact.md
+    ..../profiles/
+    ....../Admin.md
+    ..labels-app/
+    ..../labels/
+    ....../CustomLabels.md
+
+  -i, --ignore-type=<value>...
+
+    List of metadata types to ignore. Valid values are Metadata Type Info names or folder names. Example:
+    (CustomApplication or application, CustomObject or objects)
+
+    Examples:
+
+    Ignore one type:
+    sf sfdocs generate --ignoretype objects
+
+    Ignore multiple types:
+    sf sfdocs generate -i objects -i applications
+
+  -p, --package=<value>...
+
+    Name of the package to generate the documentation from. Allows multiple packages. Leave it empty to generate
+    documentation from all existing packages in your sfdx-project.json file
+
+    Packages names have to match the name in the sfdx-project.json file.
+
+    Example with multiple packages:
+
+    sf sfdocs generate -p main-app -p reports-app
 ```
 
 <!-- commandsstop -->
