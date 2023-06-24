@@ -73,7 +73,7 @@
     ],
     "topics": {
       "sfdocs": {
-        "description": "Commands to say hello."
+        "description": "Commands to generate documentation files of your sfdx project."
       }
     }
   },
