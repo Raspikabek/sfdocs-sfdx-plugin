@@ -10,6 +10,9 @@ package-lock.json
 npm-error.log
 yarn-error.log
 
+# sfdx files
+.sf
+.sfdx
 
 # compile source
 lib

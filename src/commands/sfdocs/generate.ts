@@ -2,6 +2,7 @@ import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { Messages, NamedPackageDir } from '@salesforce/core';
 import * as fs from 'graceful-fs';
 import { parseStringPromise, processors } from 'xml2js';
+import * as Handlebars from 'handlebars';
 import { MetadataTypeInfo, WorkspaceStrategy } from '../../lib/config/metadataTypeInfos';
 import { typeInfos } from '../../lib/config/metadataTypeInfosConfig';
 import { Metadata } from '../../lib/metadata/Metadata';
@@ -182,7 +183,20 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
 
             switch (flags.format) {
               case 'markdown':
-                // TODO: call here handlebars framework??
+                // eslint-disable-next-line no-case-declarations
+                const template = Handlebars.compile(`# {{label}} {{deploymentStatus}} {{#each fields}}
+                 * {{label}} 
+            {{/each}}
+            `);
+                // eslint-disable-next-line no-case-declarations
+                const generatedContent = template(mtdParsed);
+
+                fs.writeFileSync(
+                  `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.md`,
+                  generatedContent,
+                  'utf-8'
+                );
+
                 break;
               default:
                 fs.writeFileSync(
