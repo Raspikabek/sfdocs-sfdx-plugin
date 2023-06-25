@@ -1,6 +1,10 @@
 import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { Messages, NamedPackageDir } from '@salesforce/core';
 import * as fs from 'graceful-fs';
+import { parseStringPromise, processors } from 'xml2js';
+import { MetadataTypeInfo, WorkspaceStrategy } from '../../lib/config/metadataTypeInfos';
+import { typeInfos } from '../../lib/config/metadataTypeInfosConfig';
+import { Metadata } from '../../lib/metadata/Metadata';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('sfdocs-sfdx-plugin', 'sfdocs.generate');
@@ -9,6 +13,14 @@ export type DocsGenerateResult = {
   outputdir: string;
   format: string;
   packages: NamedPackageDir[];
+};
+
+const xmlParserOptions = {
+  explicitArray: false,
+  explicitRoot: false,
+  ignoreAttrs: true,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  valueProcessors: [processors.parseBooleans],
 };
 
 export default class Generate extends SfCommand<DocsGenerateResult> {
@@ -54,8 +66,9 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
       fs.rmSync(flags['output-dir'], { recursive: true });
     }
 
-    // const toReturn = {};
     const pkgs = await this.getProjectPackages();
+    await this.generateDocs(pkgs);
+
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
       outputdir: flags['output-dir'],
@@ -72,5 +85,143 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     }
 
     return this.project.getUniquePackageDirectories().filter((element) => flags.package.includes(element.name));
+  }
+
+  private async generateDocs(pkgs: NamedPackageDir[]): Promise<void> {
+    const { flags } = await this.parse(Generate);
+
+    for (const namedPackageDir of pkgs) {
+      const packagePath = `${namedPackageDir.path}/main/default`;
+      this.spinner.start(`Parsing ${namedPackageDir.name}`);
+
+      for (const typeInfoDefinition in typeInfos.typeDefs) {
+        // this is just a guard-in for the for loop to avoid eslint complains... to find alterantive
+        if (!Object.prototype.hasOwnProperty.call(typeInfos.typeDefs, typeInfoDefinition)) {
+          continue;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const mtd: MetadataTypeInfo = typeInfos.typeDefs[typeInfoDefinition];
+        if (
+          !fs.existsSync(`${packagePath}/${mtd.defaultDirectory}`) ||
+          flags['ignore-type']?.includes(mtd.defaultDirectory) ||
+          flags['ignore-type']?.includes(mtd.metadataName)
+        ) {
+          continue;
+        }
+
+        for (const contentElement of fs.readdirSync(`${packagePath}/${mtd.defaultDirectory}`, {
+          withFileTypes: true,
+        })) {
+          /**
+           * In SOURCE code metadata like SObjects is stored in folders per object.
+           * The attribute that defines this seems to be: "workspaceStrategy": "folderPerSubtype",
+           */
+          switch (mtd.decompositionConfig.workspaceStrategy) {
+            case WorkspaceStrategy.FolderPerSubtype:
+              // this.parseFolderPerSubtype(); ??
+              break;
+            case WorkspaceStrategy.InFolderMetadataType:
+              // console.log('In Folder MetadataType');
+              break;
+            default:
+            // console.log('NonDecomposed');
+          }
+
+          const elementpath = `${packagePath}/${mtd.defaultDirectory}/${contentElement.name}`;
+          if (mtd.decompositionConfig.workspaceStrategy === WorkspaceStrategy.FolderPerSubtype) {
+            let mtdParsed: Metadata = { fullName: contentElement.name };
+            if (fs.existsSync(`${elementpath}/${contentElement.name}.${mtd.ext}-meta.xml`)) {
+              const content = fs.readFileSync(
+                `${packagePath}/${mtd.defaultDirectory}/${contentElement.name}/${contentElement.name}.${mtd.ext}-meta.xml`,
+                { encoding: 'utf8' }
+              );
+
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-await-in-loop
+              mtdParsed = await parseStringPromise(content, xmlParserOptions);
+            }
+
+            if (mtd.decompositionConfig.decompositions.length > 0) {
+              /**
+               * Per descomposition we check if the folder does exists to get its content
+               */
+              for (const element of mtd.decompositionConfig.decompositions) {
+                this.log(element.defaultDirectory);
+                if (
+                  fs.existsSync(
+                    `${packagePath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}`
+                  )
+                ) {
+                  const foldercontent = fs.readdirSync(
+                    `${packagePath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}`,
+                    { encoding: 'utf8' }
+                  );
+                  const elementsToAdd = [];
+                  for (const folderElement of foldercontent) {
+                    this.log(folderElement);
+                    const xmlelement = fs.readFileSync(
+                      `${packagePath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}/${folderElement}`,
+                      { encoding: 'utf8' }
+                    );
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-await-in-loop
+                    const parsedelement = await parseStringPromise(xmlelement, xmlParserOptions);
+                    this.log(JSON.stringify(parsedelement));
+                    elementsToAdd.push(parsedelement);
+                  }
+                  mtdParsed[element.xmlFragmentName] = elementsToAdd;
+                }
+              }
+            }
+
+            /**
+             * store info somewhere
+             */
+            fs.mkdirSync(`${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/`, {
+              recursive: true,
+            });
+
+            switch (flags.format) {
+              case 'markdown':
+                // TODO: call here handlebars framework??
+                break;
+              default:
+                fs.writeFileSync(
+                  `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.json`,
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                  JSON.stringify(mtdParsed)
+                );
+            }
+          } else {
+            // TODO: if is directory, check for content has '*-meta.xml' file
+            if (
+              mtd.decompositionConfig.strategy !== 'nonDecomposed' ||
+              contentElement.isDirectory() ||
+              !contentElement.name.includes('-meta.xml')
+            ) {
+              continue;
+            }
+            /**
+             * when the type is not stored in subfolders
+             */
+            const elementName = contentElement.name.substr(0, contentElement.name.indexOf('.'));
+            const content = fs.readFileSync(`${packagePath}/${mtd.defaultDirectory}/${contentElement.name}`, {
+              encoding: 'utf8',
+            });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-await-in-loop, @typescript-eslint/no-unsafe-call
+            const mtdParsed: Metadata = await parseStringPromise(content, xmlParserOptions);
+            mtdParsed.fullName = elementName;
+            fs.mkdirSync(`${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/`, {
+              recursive: true,
+            });
+
+            fs.writeFileSync(
+              `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.json`,
+              JSON.stringify(mtdParsed)
+            );
+          }
+        }
+      }
+      this.spinner.stop();
+    }
   }
 }
