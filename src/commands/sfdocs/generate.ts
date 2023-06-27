@@ -59,6 +59,10 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     reset: Flags.boolean({
       summary: messages.getMessage('flags.reset.summary'),
     }),
+    'templates-path': Flags.directory({
+      summary: 'Path to folder with custom templates',
+      description: 'Path to folder with custom templates',
+    }),
   };
 
   public async run(): Promise<DocsGenerateResult> {
@@ -69,7 +73,12 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     }
 
     const pkgs = await this.getProjectPackages();
-    await this.generateDocs(pkgs);
+    if (flags['templates-path'] != null) {
+      // do something
+    }
+    const builtInTemplatesPath =
+      flags['templates-path'] != null ? flags['templates-path'] : path.resolve(__dirname, '..', '..', 'templates');
+    await this.generateDocs(pkgs, builtInTemplatesPath);
 
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
@@ -89,7 +98,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     return this.project.getUniquePackageDirectories().filter((element) => flags.package.includes(element.name));
   }
 
-  private async generateDocs(pkgs: NamedPackageDir[]): Promise<void> {
+  private async generateDocs(pkgs: NamedPackageDir[], builtInTemplatesPath: string): Promise<void> {
     const { flags } = await this.parse(Generate);
 
     for (const namedPackageDir of pkgs) {
@@ -131,7 +140,6 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
           }
 
           const elementpath = `${packagePath}/${mtd.defaultDirectory}/${contentElement.name}`;
-          const builtInTemplatesPath = path.resolve(__dirname, '..', '..', 'templates');
           if (mtd.decompositionConfig.workspaceStrategy === WorkspaceStrategy.FolderPerSubtype) {
             let mtdParsed: Metadata = { fullName: contentElement.name };
             if (fs.existsSync(`${elementpath}/${contentElement.name}.${mtd.ext}-meta.xml`)) {
