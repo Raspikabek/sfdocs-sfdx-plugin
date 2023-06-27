@@ -1,0 +1,18 @@
+Custom Template
+
+<h1>{{fullname}}</h1>
+
+{{#each classAccesses}} {{apexClass}} {{/each}}
+
+<table>
+  <tr>
+    <th>Tab Name</th>
+    <th>Visibility</th>
+  </tr>
+  {{#each tabSettings}}
+  <tr>
+    <td>{{tab}}</td>
+    <td>{{visibility}}</td>
+  </tr>
+  {{/each}}
+</table>
