@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { Messages, NamedPackageDir } from '@salesforce/core';
 import * as fs from 'graceful-fs';
@@ -130,6 +131,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
           }
 
           const elementpath = `${packagePath}/${mtd.defaultDirectory}/${contentElement.name}`;
+          const builtInTemplatesPath = path.resolve(__dirname, '..', '..', 'templates');
           if (mtd.decompositionConfig.workspaceStrategy === WorkspaceStrategy.FolderPerSubtype) {
             let mtdParsed: Metadata = { fullName: contentElement.name };
             if (fs.existsSync(`${elementpath}/${contentElement.name}.${mtd.ext}-meta.xml`)) {
@@ -147,7 +149,6 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
                * Per descomposition we check if the folder does exists to get its content
                */
               for (const element of mtd.decompositionConfig.decompositions) {
-                this.log(element.defaultDirectory);
                 if (
                   fs.existsSync(
                     `${packagePath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}`
@@ -159,14 +160,12 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
                   );
                   const elementsToAdd = [];
                   for (const folderElement of foldercontent) {
-                    this.log(folderElement);
                     const xmlelement = fs.readFileSync(
                       `${packagePath}/${mtd.defaultDirectory}/${contentElement.name}/${element.defaultDirectory}/${folderElement}`,
                       { encoding: 'utf8' }
                     );
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-await-in-loop
                     const parsedelement = await parseStringPromise(xmlelement, xmlParserOptions);
-                    this.log(JSON.stringify(parsedelement));
                     elementsToAdd.push(parsedelement);
                   }
                   mtdParsed[element.xmlFragmentName] = elementsToAdd;
@@ -181,39 +180,47 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
               recursive: true,
             });
 
-            switch (flags.format) {
-              case 'markdown':
-                // eslint-disable-next-line no-case-declarations
-                const template = Handlebars.compile(`# {{label}} {{deploymentStatus}} {{#each fields}}
-                 * {{label}} 
-            {{/each}}
-            `);
-                // eslint-disable-next-line no-case-declarations
-                const generatedContent = template(mtdParsed);
+            try {
+              const template = Handlebars.compile(
+                fs.readFileSync(`${builtInTemplatesPath}/${mtd.defaultDirectory}.md`, {
+                  encoding: 'utf8',
+                })
+              );
+              const generatedContent = template(mtdParsed);
 
-                fs.writeFileSync(
-                  `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.md`,
-                  generatedContent,
-                  'utf-8'
-                );
-
-                break;
-              default:
-                fs.writeFileSync(
-                  `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.json`,
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                  JSON.stringify(mtdParsed)
-                );
+              fs.writeFileSync(
+                `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.md`,
+                generatedContent,
+                'utf-8'
+              );
+            } catch (err) {
+              // do nothing
             }
+
+            try {
+              const template = Handlebars.compile(
+                fs.readFileSync(`${builtInTemplatesPath}/${mtd.defaultDirectory}.html`, {
+                  encoding: 'utf8',
+                })
+              );
+              const generatedContent = template(mtdParsed);
+
+              fs.writeFileSync(
+                `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.html`,
+                generatedContent,
+                'utf-8'
+              );
+            } catch (err) {
+              // do nothing
+            }
+
+            fs.writeFileSync(
+              `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${contentElement.name}.json`,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              JSON.stringify(mtdParsed)
+            );
           } else {
             // TODO: if is directory, check for content has '*-meta.xml' file
-            if (
-              mtd.decompositionConfig.strategy !== 'nonDecomposed' ||
-              contentElement.isDirectory() ||
-              !contentElement.name.includes('-meta.xml')
-            ) {
-              continue;
-            }
             /**
              * when the type is not stored in subfolders
              */
@@ -227,6 +234,40 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
             fs.mkdirSync(`${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/`, {
               recursive: true,
             });
+
+            try {
+              const template = Handlebars.compile(
+                fs.readFileSync(`${builtInTemplatesPath}/${mtd.defaultDirectory}.md`, {
+                  encoding: 'utf8',
+                })
+              );
+              const generatedContent = template(mtdParsed);
+
+              fs.writeFileSync(
+                `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.md`,
+                generatedContent,
+                'utf-8'
+              );
+            } catch (err) {
+              // do nothing
+            }
+
+            try {
+              const template = Handlebars.compile(
+                fs.readFileSync(`${builtInTemplatesPath}/${mtd.defaultDirectory}.html`, {
+                  encoding: 'utf8',
+                })
+              );
+              const generatedContent = template(mtdParsed);
+
+              fs.writeFileSync(
+                `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.html`,
+                generatedContent,
+                'utf-8'
+              );
+            } catch (err) {
+              // do nothing
+            }
 
             fs.writeFileSync(
               `${flags['output-dir']}/${namedPackageDir.name}/${mtd.defaultDirectory}/${elementName}.json`,
