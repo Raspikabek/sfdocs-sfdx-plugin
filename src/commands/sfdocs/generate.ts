@@ -1,15 +1,23 @@
 import * as path from 'path';
 import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { Messages, NamedPackageDir } from '@salesforce/core';
+import { MetadataResolver } from '@salesforce/source-deploy-retrieve';
 import * as fs from 'graceful-fs';
 import { parseStringPromise, processors } from 'xml2js';
 import * as Handlebars from 'handlebars';
-import { MetadataTypeInfo, WorkspaceStrategy } from '../../lib/config/metadataTypeInfos';
-import { typeInfos } from '../../lib/config/metadataTypeInfosConfig';
-import { Metadata } from '../../lib/metadata/Metadata';
+import { MetadataTypeInfo, WorkspaceStrategy } from '../../service/config/metadataTypeInfos';
+import { typeInfos } from '../../service/config/metadataTypeInfosConfig';
+import { Metadata } from '../../service/metadata/Metadata';
+import { TemplateInfo } from '../../service/templateInfo';
+import { filterSourceComponentWithTemplateInfo, getPackageFolders, parsePackageComponents } from '../../service/utils';
+
+/**
+ * Using Metadata Registry: https://github.com/forcedotcom/source-deploy-retrieve/blob/main/HANDBOOK.md#metadata-registry
+ */
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('sfdocs-sfdx-plugin', 'sfdocs.generate');
+const resolver = new MetadataResolver();
 
 export type DocsGenerateResult = {
   outputdir: string;
@@ -68,18 +76,13 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
   public async run(): Promise<DocsGenerateResult> {
     const { flags } = await this.parse(Generate);
 
-    if (flags.reset && fs.existsSync(flags['output-dir'])) {
-      fs.rmSync(flags['output-dir'], { recursive: true });
-    }
+    // TODO: following methods as promise all?
+    await this.removeFolderIfExists();
+    const pkgs = await this.getPackageDirectories();
+    const templates = await this.getTemplatesInfo();
 
-    const pkgs = await this.getProjectPackages();
-    if (flags['templates-path'] != null) {
-      // do something
-    }
-    const builtInTemplatesPath =
-      flags['templates-path'] != null ? flags['templates-path'] : path.resolve(__dirname, '..', '..', 'templates');
-    await this.generateDocs(pkgs, builtInTemplatesPath);
-
+    // await this.generateDocs(pkgs, templatesPath);
+    await this.generateDocsPerPackageInParallel(pkgs, templates);
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
       outputdir: flags['output-dir'],
@@ -88,7 +91,14 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     };
   }
 
-  private async getProjectPackages(): Promise<NamedPackageDir[]> {
+  private async removeFolderIfExists(): Promise<void> {
+    const { flags } = await this.parse(Generate);
+    if (flags.reset && fs.existsSync(flags['output-dir'])) {
+      fs.rmSync(flags['output-dir'], { recursive: true });
+    }
+  }
+
+  private async getPackageDirectories(): Promise<NamedPackageDir[]> {
     const { flags } = await this.parse(Generate);
 
     if (!flags.package?.length) {
@@ -96,6 +106,41 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     }
 
     return this.project.getUniquePackageDirectories().filter((element) => flags.package.includes(element.name));
+  }
+
+  private async getTemplatesInfo(): Promise<TemplateInfo[]> {
+    const { flags } = await this.parse(Generate);
+    const templatesPath =
+      flags['templates-path'] != null ? flags['templates-path'] : path.resolve(__dirname, '..', '..', 'templates');
+    const paths = await fs.promises.readdir(templatesPath, {});
+    const templates: TemplateInfo[] = [];
+    for (const template of paths) {
+      const fileNameWithExtension = path.basename(template);
+      templates.push({
+        name: fileNameWithExtension.slice(0, fileNameWithExtension.lastIndexOf('.')),
+        path: path.join(templatesPath, template),
+        type: path.extname(template).slice(1),
+      });
+    }
+    return templates;
+  }
+
+  private async generateDocsPerPackageInParallel(
+    packages: NamedPackageDir[],
+    templates: TemplateInfo[]
+  ): Promise<string[]> {
+    const generatorPromises = packages.map(async (pkg) => {
+      const pkgFolders = await getPackageFolders(pkg.path);
+      this.log(`Package ${pkg.name} content: `, pkgFolders);
+
+      const components = resolver.getComponentsFromPath(pkg.path);
+      const filteredComponents = filterSourceComponentWithTemplateInfo(components, templates);
+      await parsePackageComponents(pkg, filteredComponents);
+      return pkgFolders;
+    });
+
+    await Promise.all(generatorPromises);
+    return null;
   }
 
   private async generateDocs(pkgs: NamedPackageDir[], builtInTemplatesPath: string): Promise<void> {
