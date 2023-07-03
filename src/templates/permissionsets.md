@@ -1,13 +1,13 @@
-# {{label}}
+# {{PermissionSet.label}}
 
-## {{deploymentStatus}}
+## {{PermissionSet.deploymentStatus}}
 
-{{#each classAccesses}}
+{{#each PermissionSet.classAccesses}}
 {{apexClass}}
 {{/each}}
 
 | Tab Name | Visibility |
 | -------- | ---------- |
-{{#each tabSettings}}
+{{#each PermissionSet.tabSettings}}
 | {{tab}} | {{visibility}} |
 {{/each}}

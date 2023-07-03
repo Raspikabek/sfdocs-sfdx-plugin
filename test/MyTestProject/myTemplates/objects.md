@@ -1,6 +1,6 @@
 CustomTemplate
 
-# {{label}}
+# {{CustomObject.label}}
 
 ## {{deploymentStatus}}
 

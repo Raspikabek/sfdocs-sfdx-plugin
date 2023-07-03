@@ -9,7 +9,11 @@ import { MetadataTypeInfo, WorkspaceStrategy } from '../../service/config/metada
 import { typeInfos } from '../../service/config/metadataTypeInfosConfig';
 import { Metadata } from '../../service/metadata/Metadata';
 import { TemplateInfo } from '../../service/templateInfo';
-import { filterSourceComponentWithTemplateInfo, getPackageFolders, parsePackageComponents } from '../../service/utils';
+import {
+  filterSourceComponentWithTemplateInfo,
+  getPackageFolders,
+  convertPackageComponents,
+} from '../../service/utils';
 
 /**
  * Using Metadata Registry: https://github.com/forcedotcom/source-deploy-retrieve/blob/main/HANDBOOK.md#metadata-registry
@@ -82,7 +86,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     const templates = await this.getTemplatesInfo();
 
     // await this.generateDocs(pkgs, templatesPath);
-    await this.generateDocsPerPackageInParallel(pkgs, templates);
+    await this.generateDocsPerPackageInParallel(pkgs, templates, flags['output-dir']);
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
       outputdir: flags['output-dir'],
@@ -127,7 +131,8 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
 
   private async generateDocsPerPackageInParallel(
     packages: NamedPackageDir[],
-    templates: TemplateInfo[]
+    templates: TemplateInfo[],
+    outputDirectory: string
   ): Promise<string[]> {
     const generatorPromises = packages.map(async (pkg) => {
       const pkgFolders = await getPackageFolders(pkg.path);
@@ -135,7 +140,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
 
       const components = resolver.getComponentsFromPath(pkg.path);
       const filteredComponents = filterSourceComponentWithTemplateInfo(components, templates);
-      await parsePackageComponents(pkg, filteredComponents);
+      await convertPackageComponents(pkg, filteredComponents, outputDirectory, templates);
       return pkgFolders;
     });
 
