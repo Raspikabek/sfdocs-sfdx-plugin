@@ -1430,13 +1430,6 @@
     "@types/expect" "^1.20.4"
     "@types/node" "*"
 
-"@types/xml2js@^0.4.11":
-  version "0.4.11"
-  resolved "https://registry.npmjs.org/@types/xml2js/-/xml2js-0.4.11.tgz"
-  integrity sha512-JdigeAKmCyoJUiQljjr7tQG3if9NkqGUgwEUqBvV0N7LM4HyQk7UXCnusRa1lnvXAEYJ8mw8GtZWioagNztOwA==
-  dependencies:
-    "@types/node" "*"
-
 "@typescript-eslint/eslint-plugin@^5.36.1":
   version "5.38.0"
   resolved "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-5.38.0.tgz"
