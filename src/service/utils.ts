@@ -48,7 +48,7 @@ export async function convertPackageComponents(
     return r;
   });
 
-  const promisesResult = await Promise.all(resultsParsePromises);
+  await Promise.all(resultsParsePromises);
   removePackagexml(result.packagePath);
   return null;
 }
