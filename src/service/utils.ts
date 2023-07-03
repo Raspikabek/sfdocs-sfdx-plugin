@@ -3,18 +3,10 @@ import * as fs from 'graceful-fs';
 import { NamedPackageDir } from '@salesforce/core';
 import { SourceComponent, MetadataConverter } from '@salesforce/source-deploy-retrieve';
 import { JsonMap } from '@salesforce/ts-types';
-// import { parseStringPromise, processors } from 'xml2js';
 import * as Handlebars from 'handlebars';
 import { TemplateInfo } from './templateInfo';
 
 const converter = new MetadataConverter();
-
-// const xmlParserOptions = {
-//   explicitArray: false,
-//   explicitRoot: false,
-//   ignoreAttrs: true,
-//   valueProcessors: [processors.parseBooleans],
-// };
 
 export async function getPackageFolders(pkgPath: string): Promise<string[]> {
   const pkgFolders = await fs.promises.readdir(path.join(pkgPath, 'main', 'default'));

@@ -3,11 +3,6 @@ import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { Messages, NamedPackageDir } from '@salesforce/core';
 import { MetadataResolver } from '@salesforce/source-deploy-retrieve';
 import * as fs from 'graceful-fs';
-import { parseStringPromise, processors } from 'xml2js';
-import * as Handlebars from 'handlebars';
-import { MetadataTypeInfo, WorkspaceStrategy } from '../../service/config/metadataTypeInfos';
-import { typeInfos } from '../../service/config/metadataTypeInfosConfig';
-import { Metadata } from '../../service/metadata/Metadata';
 import { TemplateInfo } from '../../service/templateInfo';
 import {
   filterSourceComponentWithTemplateInfo,
@@ -27,14 +22,6 @@ export type DocsGenerateResult = {
   outputdir: string;
   format: string;
   packages: NamedPackageDir[];
-};
-
-const xmlParserOptions = {
-  explicitArray: false,
-  explicitRoot: false,
-  ignoreAttrs: true,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  valueProcessors: [processors.parseBooleans],
 };
 
 export default class Generate extends SfCommand<DocsGenerateResult> {
@@ -72,8 +59,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
       summary: messages.getMessage('flags.reset.summary'),
     }),
     'templates-path': Flags.directory({
-      summary: 'Path to folder with custom templates',
-      description: 'Path to folder with custom templates',
+      summary: messages.getMessage('flags.templatespath.summary'),
     }),
   };
 
