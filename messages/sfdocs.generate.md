@@ -40,6 +40,10 @@ Ignore multiple types:
 
 Removes the existing target docs folder.
 
+# flags.templatespath.summary
+
+Path to folder with custom templates.
+
 # flags.outputdir.summary
 
 Target directory to store the output documentation files
