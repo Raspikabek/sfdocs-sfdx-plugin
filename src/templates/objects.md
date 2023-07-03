@@ -1,7 +1,7 @@
-# {{label}}
+# {{CustomObject.label}}
 
-## {{deploymentStatus}}
+## {{CustomObject.deploymentStatus}}
 
-{{#each fields}}
+{{#each CustomObject.fields}}
 {{fullName}}
 {{/each}}

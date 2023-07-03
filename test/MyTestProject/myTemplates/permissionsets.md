@@ -1,6 +1,6 @@
 Custom Template
 
-# {{fullName}}
+# {{PermissionSet.label}}
 
 ## {{deploymentStatus}}
 
