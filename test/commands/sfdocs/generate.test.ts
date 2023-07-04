@@ -1,21 +1,48 @@
 import * as path from 'path';
 import { TestSession } from '@salesforce/cli-plugins-testkit';
-import { DocsGenerateResult } from '../../../src/commands/sfdocs/generate';
+// import { TestContext } from '@salesforce/core/lib/testSetup';
+import { expect } from 'chai';
+import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
+import Generate from '../../../src/commands/sfdocs/generate';
 
 describe('Generate Docs', () => {
+  // const $$ = new TestContext();
+  let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
   let testSession: TestSession;
+
   before(async () => {
+    const testProjectPath = path.join(process.cwd(), 'test', 'MyTestProject');
+    // eslint-disable-next-line no-console
+    console.log(testProjectPath);
     testSession = await TestSession.create({
       project: {
-        sourceDir: path.join(process.cwd(), 'test/MyTestProject'),
+        sourceDir: testProjectPath,
+        name: 'MyTestProject',
+        destinationDir: testProjectPath,
       },
     });
   });
+
+  // beforeEach(() => {
+  //   sfCommandStubs = stubSfCommandUx($$.SANDBOX);
+  // });
+
+  // afterEach(() => {
+  //   $$.restore();
+  // });
 
   after(async () => {
     await testSession?.clean();
   });
 
+  it('runs sfdocs generate', async () => {
+    await Generate.run([]);
+    const output = sfCommandStubs.log
+      .getCalls()
+      .flatMap((c) => c.args)
+      .join('\n');
+    expect(output).to.include('json');
+  });
   // test
   //   .stdout()
   //   .command(['sfdocs:generate'])

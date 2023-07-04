@@ -1,10 +1,9 @@
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import * as fs from 'graceful-fs';
 import { expect } from 'chai';
 import { DocsGenerateResult } from '../../../src/commands/sfdocs/generate';
 
 let testSession: TestSession;
-let error: boolean;
+// let error: boolean;
 
 describe('sfdocs generate NUTs', () => {
   before('prepare session', async () => {
@@ -18,11 +17,11 @@ describe('sfdocs generate NUTs', () => {
     await testSession?.clean();
   });
 
-  // it('should generate defaults in docs folder and json format', () => {
-  //   const { result } = execCmd<DocsGenerateResult>('sfdocs generate --json', { ensureExitCode: 0 }).jsonOutput;
-  //   expect(result.outputdir).to.equal('docs');
-  //   expect(result.format).to.equal('json');
-  // });
+  it('should generate defaults in docs folder and json format', () => {
+    const result = execCmd<DocsGenerateResult>('sfdocs generate --json', { ensureExitCode: 0 }).jsonOutput?.result;
+    expect(result?.outputdir).to.equal('docs');
+    expect(result?.format).to.equal('json');
+  });
 
   // it('should generate docs in markdown', () => {
   //   const { result } = execCmd<DocsGenerateResult>('sfdocs generate --format markdown --json', {
