@@ -44,6 +44,10 @@ Removes the existing target docs folder.
 
 Path to folder with custom templates.
 
+# flags.helperspath.summary
+
+Path to file with custom helper definition methods.
+
 # flags.outputdir.summary
 
 Target directory to store the output documentation files

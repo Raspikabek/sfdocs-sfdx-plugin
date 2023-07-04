@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+<Profile xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
         <application>Dreamhouse</application>
         <visible>true</visible>
@@ -221,4 +221,4 @@
         <tab>Settings</tab>
         <visibility>Visible</visibility>
     </tabSettings>
-</PermissionSet>
+</Profile>

@@ -9,6 +9,8 @@ import {
   getPackageFolders,
   convertPackageComponents,
 } from '../../service/utils';
+import { HelperModule } from '../../service/helpersModule';
+import * as defaultHelpers from '../../helpers/default';
 
 /**
  * Using Metadata Registry: https://github.com/forcedotcom/source-deploy-retrieve/blob/main/HANDBOOK.md#metadata-registry
@@ -61,6 +63,9 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     'templates-path': Flags.directory({
       summary: messages.getMessage('flags.templatespath.summary'),
     }),
+    'helpers-path': Flags.string({
+      summary: messages.getMessage('flags.helperspath.summary'),
+    }),
   };
 
   public async run(): Promise<DocsGenerateResult> {
@@ -70,9 +75,22 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     await this.removeFolderIfExists();
     const pkgs = await this.getPackageDirectories();
     const templates = await this.getTemplatesInfo();
+    let handlebarHelpersPath = '';
+    let helpers: HelperModule = defaultHelpers.default as HelperModule;
+    if (flags['helpers-path']) {
+      handlebarHelpersPath = path.resolve(flags['helpers-path']);
+      // TODO: find a way to import dynamically better with no lint errors & from JS file and not TS?
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const customHelpersModule = await import(handlebarHelpersPath);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const newHelpers: HelperModule = customHelpersModule.default as HelperModule;
+      helpers = {
+        ...helpers,
+        ...newHelpers,
+      };
+    }
 
-    // await this.generateDocs(pkgs, templatesPath);
-    await this.generateDocsPerPackageInParallel(pkgs, templates, flags['output-dir']);
+    await this.generateDocsPerPackageInParallel(pkgs, templates, flags['output-dir'], helpers);
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
       outputdir: flags['output-dir'],
@@ -118,19 +136,20 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
   private async generateDocsPerPackageInParallel(
     packages: NamedPackageDir[],
     templates: TemplateInfo[],
-    outputDirectory: string
-  ): Promise<string[]> {
+    outputDirectory: string,
+    helpers: HelperModule
+  ): Promise<void> {
     const generatorPromises = packages.map(async (pkg) => {
       const pkgFolders = await getPackageFolders(pkg.path);
       this.log(`Package ${pkg.name} content: `, pkgFolders);
 
       const components = resolver.getComponentsFromPath(pkg.path);
       const filteredComponents = filterSourceComponentWithTemplateInfo(components, templates);
-      await convertPackageComponents(pkg, filteredComponents, outputDirectory, templates);
+      await convertPackageComponents(pkg, filteredComponents, outputDirectory, templates, helpers);
       return pkgFolders;
     });
 
     await Promise.all(generatorPromises);
-    return null;
+    // return null;
   }
 }
