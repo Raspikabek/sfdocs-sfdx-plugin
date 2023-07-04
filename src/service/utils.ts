@@ -4,6 +4,7 @@ import { NamedPackageDir } from '@salesforce/core';
 import { SourceComponent, MetadataConverter } from '@salesforce/source-deploy-retrieve';
 import { JsonMap } from '@salesforce/ts-types';
 import * as Handlebars from 'handlebars';
+import { HelperModule } from './helpersModule';
 import { TemplateInfo } from './templateInfo';
 
 const converter = new MetadataConverter();
@@ -28,7 +29,8 @@ export async function convertPackageComponents(
   pkg: NamedPackageDir,
   components: SourceComponent[],
   directory: string,
-  templates: TemplateInfo[]
+  templates: TemplateInfo[],
+  helpers: HelperModule
 ): Promise<void> {
   const result = await converter.convert(components, 'metadata', {
     type: 'directory',
@@ -36,7 +38,7 @@ export async function convertPackageComponents(
     packageName: pkg.name,
   });
   const resultsParsePromises = result.converted.map(async (component) => {
-    const r = await parseComponent(component, templates);
+    const r = await parseComponent(component, templates, helpers);
     return r;
   });
 
@@ -45,9 +47,19 @@ export async function convertPackageComponents(
   return null;
 }
 
-async function parseComponent(component: SourceComponent, templates: TemplateInfo[]): Promise<JsonMap> {
+async function parseComponent(
+  component: SourceComponent,
+  templates: TemplateInfo[],
+  helpers: HelperModule
+): Promise<JsonMap> {
   const componentContent = await component.parseXml();
   try {
+    if (Object.keys(helpers).length > 0) {
+      Object.entries(helpers).forEach(([helperName, helperFn]) => {
+        Handlebars.registerHelper(helperName, helperFn);
+      });
+    }
+
     const templatePath = getTemplateByNameAndType(templates, component.type.directoryName, 'md');
     const template = Handlebars.compile(
       fs.readFileSync(templatePath, {
