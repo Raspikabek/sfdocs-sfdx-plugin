@@ -4,6 +4,7 @@ import { NamedPackageDir } from '@salesforce/core';
 import { SourceComponent, MetadataConverter } from '@salesforce/source-deploy-retrieve';
 import { JsonMap } from '@salesforce/ts-types';
 import * as Handlebars from 'handlebars';
+import { error } from '@oclif/core/lib/errors';
 import { HelperModule } from './helpersModule';
 import { TemplateInfo } from './templateInfo';
 
@@ -37,6 +38,9 @@ export async function convertPackageComponents(
     outputDirectory: directory,
     packageName: pkg.name,
   });
+  if (result.converted === undefined || result.packagePath === undefined) {
+    return;
+  }
   const resultsParsePromises = result.converted.map(async (component) => {
     const r = await parseComponent(component, templates, helpers);
     return r;
@@ -44,7 +48,6 @@ export async function convertPackageComponents(
 
   await Promise.all(resultsParsePromises);
   removePackagexml(result.packagePath);
-  return null;
 }
 
 async function parseComponent(
@@ -66,6 +69,13 @@ async function parseComponent(
         encoding: 'utf8',
       })
     );
+
+    /**
+     * TODO: Review what elements don't contain component.xml attribute
+     */
+    if (component.xml === undefined) {
+      throw error;
+    }
     const generatedContent = template(componentContent);
     const fileName = path.basename(component.xml, path.extname(component.xml)) + '.md';
     const fileNameJson = path.basename(component.xml, path.extname(component.xml)) + '.json';
@@ -82,7 +92,7 @@ const removePackagexml = (dir: string): void => {
   fs.unlinkSync(path.join(dir, 'package.xml'));
 };
 
-const getTemplateByNameAndType = (templates: TemplateInfo[], name: string, type: string): string | undefined => {
+const getTemplateByNameAndType = (templates: TemplateInfo[], name: string, type: string): string => {
   const templatePath = templates.find((t) => t.name === name && t.type === type);
-  return templatePath.path;
+  return templatePath ? templatePath.path : '';
 };

@@ -108,12 +108,13 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
 
   private async getPackageDirectories(): Promise<NamedPackageDir[]> {
     const { flags } = await this.parse(Generate);
+    const packages = flags.package;
 
-    if (!flags.package?.length) {
+    if (packages === undefined || !packages.length) {
       return this.project.getUniquePackageDirectories();
     }
 
-    return this.project.getUniquePackageDirectories().filter((element) => flags.package.includes(element.name));
+    return this.project.getUniquePackageDirectories().filter((element) => packages.includes(element.name));
   }
 
   private async getTemplatesInfo(): Promise<TemplateInfo[]> {
