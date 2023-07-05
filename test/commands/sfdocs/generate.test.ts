@@ -35,7 +35,7 @@ describe('Generate Docs', () => {
     await testSession?.clean();
   });
 
-  it('runs sfdocs generate', async () => {
+  it('runs docs generate', async () => {
     await Generate.run([]);
     const output = sfCommandStubs.log
       .getCalls()
@@ -45,7 +45,7 @@ describe('Generate Docs', () => {
   });
   // test
   //   .stdout()
-  //   .command(['sfdocs:generate'])
+  //   .command(['docs:generate'])
   //   .it('runs generation of documentation with defaults', (ctx) => {
   //     expect(ctx.stdout).to.contain('json');
   //     expect(ctx.stdout).to.contain('docs');
@@ -53,7 +53,7 @@ describe('Generate Docs', () => {
 
   // test
   //   .stdout()
-  //   .command(['sfdocs:generate', '--json'])
+  //   .command(['docs:generate', '--json'])
   //   .it('runs generate --json', (ctx) => {
   //     const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
   //     expect(result.format).to.equal('json');
@@ -65,7 +65,7 @@ describe('Generate Docs', () => {
 
   // test
   //   .stdout()
-  //   .command(['sfdocs:generate', '--reset', '--json'])
+  //   .command(['docs:generate', '--reset', '--json'])
   //   .it('runs generate --reset --json', (ctx) => {
   //     expect(ctx.stdout).to.contain('json');
   //     expect(ctx.stdout).to.contain('docs');
@@ -73,7 +73,7 @@ describe('Generate Docs', () => {
 
   // test
   //   .stdout()
-  //   .command(['sfdocs:generate', '--format', 'markdown'])
+  //   .command(['docs:generate', '--format', 'markdown'])
   //   .it('runs generate --format markdown', (ctx) => {
   //     expect(ctx.stdout).to.contain('markdown');
   //     expect(ctx.stdout).to.contain('docs');
@@ -81,7 +81,7 @@ describe('Generate Docs', () => {
 
   // test
   //   .stdout()
-  //   .command(['sfdocs:generate', '--format', 'markdown', '--json'])
+  //   .command(['docs:generate', '--format', 'markdown', '--json'])
   //   .it('runs generate --format markdown --json', (ctx) => {
   //     const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
   //     expect(result.format).to.equal('markdown');
@@ -90,7 +90,7 @@ describe('Generate Docs', () => {
 
   // test
   //   .stdout()
-  //   .command(['sfdocs:generate', '--output-dir', 'alternative-dir', '--json'])
+  //   .command(['docs:generate', '--output-dir', 'alternative-dir', '--json'])
   //   .it('runs generate --format markdown --json', (ctx) => {
   //     const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
   //     expect(result.outputdir).to.equal('alternative-dir');
@@ -99,7 +99,7 @@ describe('Generate Docs', () => {
 
   // test
   //   .stdout()
-  //   .command(['sfdocs:generate', '--package', 'force-app', '--json'])
+  //   .command(['docs:generate', '--package', 'force-app', '--json'])
   //   .it('runs generate --package force-app --json', (ctx) => {
   //     const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
   //     expect(result.outputdir).to.equal('docs');
@@ -110,7 +110,7 @@ describe('Generate Docs', () => {
 
   // test
   //   .stdout()
-  //   .command(['sfdocs:generate', '--package', 'force-second-app', '--json'])
+  //   .command(['docs:generate', '--package', 'force-second-app', '--json'])
   //   .it('runs generate --package force-second-app --json', (ctx) => {
   //     const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
   //     expect(result.outputdir).to.equal('docs');
@@ -121,7 +121,7 @@ describe('Generate Docs', () => {
 
   // test
   //   .stdout()
-  //   .command(['sfdocs:generate', '--package', 'non-existent-app', '--json'])
+  //   .command(['docs:generate', '--package', 'non-existent-app', '--json'])
   //   .it('runs generate --package non-existent-app --json', (ctx) => {
   //     const { result } = JSON.parse(ctx.stdout) as { result: DocsGenerateResult };
   //     expect(result.outputdir).to.equal('docs');

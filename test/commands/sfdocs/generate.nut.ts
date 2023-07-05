@@ -5,7 +5,7 @@ import { DocsGenerateResult } from '../../../src/commands/docs/generate';
 let testSession: TestSession;
 // let error: boolean;
 
-describe('sfdocs generate NUTs', () => {
+describe('docs generate NUTs', () => {
   before('prepare session', async () => {
     testSession = await TestSession.create({
       devhubAuthStrategy: 'AUTO',
@@ -18,13 +18,13 @@ describe('sfdocs generate NUTs', () => {
   });
 
   it('should generate defaults in docs folder and json format', () => {
-    const result = execCmd<DocsGenerateResult>('sfdocs generate --json', { ensureExitCode: 0 }).jsonOutput?.result;
+    const result = execCmd<DocsGenerateResult>('docs generate --json', { ensureExitCode: 0 }).jsonOutput?.result;
     expect(result?.outputdir).to.equal('docs');
     expect(result?.format).to.equal('json');
   });
 
   // it('should generate docs in markdown', () => {
-  //   const { result } = execCmd<DocsGenerateResult>('sfdocs generate --format markdown --json', {
+  //   const { result } = execCmd<DocsGenerateResult>('docs generate --format markdown --json', {
   //     ensureExitCode: 0,
   //   }).jsonOutput;
   //   expect(result.format).to.equal('markdown');
@@ -34,7 +34,7 @@ describe('sfdocs generate NUTs', () => {
   //   fs.mkdirSync('docs/force-app/objects', { recursive: true });
   //   fs.writeFileSync('docs/force-app/objects/CustomObject.json', '{test: true}');
 
-  //   const { result } = execCmd<DocsGenerateResult>('sfdocs generate --reset --json', {
+  //   const { result } = execCmd<DocsGenerateResult>('docs generate --reset --json', {
   //     ensureExitCode: 0,
   //   }).jsonOutput;
 
