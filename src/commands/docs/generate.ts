@@ -31,6 +31,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
+  public static readonly enableJsonFlag = true;
 
   public static readonly flags = {
     'output-dir': Flags.directory({
