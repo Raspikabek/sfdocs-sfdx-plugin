@@ -1,10 +1,10 @@
 # summary
 
-Generates documentation of your project.
+Generate documentation of your project in a particular format and based on Handlebar templates
 
 # description
 
-Generates documentation under a folder in a particular format based on your project local metadata.
+Documentation is generated based on your local source code. Supports multi-package solutions, custom templates and custom handlebar helpers. Read more in https://sfdocs.netlify.app
 
 # flags.format.summary
 
@@ -24,29 +24,37 @@ Example with multiple packages:
 
 # flags.ignoretype.summary
 
-List of metadata types to ignore. Valid values are Metadata Type Info names or folder names. Example: (CustomApplication or application, CustomObject or objects)
+List of metadata types to ignore. Valid values are Metadata Type names or folder names. Example: (CustomApplication or applications, CustomObject or objects)
 
 # flags.ignoretype.description
 
 Examples:
 
 Ignore one type:
-<%= config.bin %> <%= command.id %> --ignoretype objects
+<%= config.bin %> <%= command.id %> --ignoretype CustomObject
 
 Ignore multiple types:
 <%= config.bin %> <%= command.id %> -i objects -i applications
 
 # flags.reset.summary
 
-Removes the existing target docs folder.
+Removes the existing target docs folder before generating the new content
 
 # flags.templatespath.summary
 
 Path to folder with custom templates.
 
+# flags.templatespath.description
+
+Will override all default templates and missing templates will ignore the missing metadata types. If `objects.md` is missing in the path, the `objects` will not be generated.
+
 # flags.helperspath.summary
 
-Path to file with custom helper definition methods.
+Path to file with additional custom helper definition methods.
+
+# flags.helperspath.summary
+
+Custom methods can override existing default methods, the rest will be merged and will coexist with the default helpers.
 
 # flags.outputdir.summary
 
@@ -54,21 +62,7 @@ Target directory to store the output documentation files
 
 # flags.outputdir.description
 
-The target directory will create a folder package within your project and inside the appropriate Metadata Type structure. Example:
-
-<%= config.bin %> <%= command.id %> -d docs -p force-app -p labels-app
-
-Output:
-docs/
-..force-app/
-..../objects/
-....../Account.md
-....../Contact.md
-..../profiles/
-....../Admin.md
-..labels-app/
-..../labels/
-....../CustomLabels.md
+It will create a folder per sfdx package within your project and inside the appropriate Metadata Type structure.
 
 # examples
 
@@ -83,6 +77,14 @@ docs/
 - Generate documentation without CustomObjects
 
 <%= config.bin %> <%= command.id %> --ignoretypes objects
+
+- Generate documentation with custom templates
+
+<%= config.bin %> <%= command.id %> --templates-path config/templates
+
+- Generate documentation with helpers
+
+<%= config.bin %> <%= command.id %> --helpers-path config/helpers.ts
 
 # info.generate
 
