@@ -1,48 +1,84 @@
-import * as path from 'path';
-import { TestSession } from '@salesforce/cli-plugins-testkit';
-// import { TestContext } from '@salesforce/core/lib/testSetup';
+import { join } from 'path';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { expect } from 'chai';
+// import * as sinon from 'sinon';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
+// import { stubMethod } from '@salesforce/ts-sinon';
+import { SfProject } from '@salesforce/core';
+import * as oclifUtils from '@oclif/core/lib/util';
+import { MetadataConverter } from '@salesforce/source-deploy-retrieve';
 import Generate from '../../../src/commands/docs/generate';
 
 describe('Generate Docs', () => {
-  // const $$ = new TestContext();
-  let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
-  let testSession: TestSession;
+  const $$ = new TestContext();
+  const testOrg = new MockTestOrgData();
 
-  before(async () => {
-    const testProjectPath = path.join(process.cwd(), 'test', 'MyTestProject');
-    // eslint-disable-next-line no-console
-    console.log(testProjectPath);
-    testSession = await TestSession.create({
-      project: {
-        sourceDir: testProjectPath,
-        name: 'MyTestProject',
-        destinationDir: testProjectPath,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // let buildComponentSetStub: sinon.SinonStub;
+
+  // const defaultDir = join('my', 'default', 'package');
+  // the test is using fs that's in the os temp dir
+  // const projectDir = `${join($$.localPathRetrieverSync($$.id), defaultDir)}${sep}`;
+  // const myApp = join('new', 'package', 'directory');
+  // const packageXml = 'package.xml';
+
+  // before(async () => {
+  //   const testProjectPath = path.join(process.cwd(), 'test', 'MyTestProject');
+  //   // eslint-disable-next-line no-console
+  //   console.log(testProjectPath);
+  //   $$.inProject(true);
+  //   // $$.setConfigStubContents('testProject')
+  //   testSession = await TestSession.create({
+  //     project: {
+  //       sourceDir: testProjectPath,
+  //       name: 'MyTestProject',
+  //       destinationDir: testProjectPath,
+  //     },
+  //   });
+  // });
+
+  beforeEach(async () => {
+    await $$.stubAuths(testOrg);
+
+    // TODO: move this to TestSetup
+    // @ts-expect-error accessing a private property
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    SfProject.instances.clear();
+    stubSfCommandUx($$.SANDBOX);
+    // the 2 oclif flags should act as if the dir/file is there and ok
+    $$.SANDBOX.stub(oclifUtils, 'fileExists').callsFake((path: string) => Promise.resolve(path));
+    $$.SANDBOX.stub(oclifUtils, 'dirExists').callsFake((path: string) => Promise.resolve(path));
+    const testFirstPackage = join('test', 'MyTestProject', 'force-app');
+    const testSecondPackage = join('test', 'MyTestProject', 'force-second-app');
+    $$.setConfigStubContents('SfProjectJson', {
+      contents: {
+        packageDirectories: [{ path: testFirstPackage, default: true }, { path: testSecondPackage }],
       },
     });
+    $$.SANDBOX.stub(MetadataConverter.prototype, 'convert').resolves({ packagePath: 'temp' });
+    // buildComponentSetStub = stubMethod($$.SANDBOX, ComponentSetBuilder, 'build').resolves({
+    //   deploy: sinon.stub(),
+    //   getPackageXml: () => packageXml,
+    // });
   });
 
-  // beforeEach(() => {
-  //   sfCommandStubs = stubSfCommandUx($$.SANDBOX);
+  afterEach(() => {
+    $$.restore();
+  });
+
+  // after(async () => {
+  //   await testSession?.clean();
   // });
 
-  // afterEach(() => {
-  //   $$.restore();
-  // });
-
-  after(async () => {
-    await testSession?.clean();
+  it('runs docs generate with all defaults', async () => {
+    const result = await Generate.run([]);
+    expect(result.outputdir).to.equal('docs');
+    expect(result.format).to.equal('json');
+    expect(result.packages[0].path).to.contain('force-app');
+    expect(result.packages[0].default).to.be.true;
+    expect(result.packages[1].path).to.contain('force-second-app');
   });
 
-  it('runs docs generate', async () => {
-    await Generate.run([]);
-    const output = sfCommandStubs.log
-      .getCalls()
-      .flatMap((c) => c.args)
-      .join('\n');
-    expect(output).to.include('json');
-  });
   // test
   //   .stdout()
   //   .command(['docs:generate'])

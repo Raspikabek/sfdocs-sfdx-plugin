@@ -8,8 +8,8 @@ let testSession: TestSession;
 describe('docs generate NUTs', () => {
   before('prepare session', async () => {
     testSession = await TestSession.create({
-      devhubAuthStrategy: 'AUTO',
-      project: { name: 'testProject' },
+      devhubAuthStrategy: 'NONE',
+      project: { name: 'MyTestProject', sourceDir: 'test/MyTestProject' },
     });
   });
 
@@ -23,29 +23,29 @@ describe('docs generate NUTs', () => {
     expect(result?.format).to.equal('json');
   });
 
-  // it('should generate docs in markdown', () => {
-  //   const { result } = execCmd<DocsGenerateResult>('docs generate --format markdown --json', {
-  //     ensureExitCode: 0,
-  //   }).jsonOutput;
-  //   expect(result.format).to.equal('markdown');
-  // });
+  it('should generate docs in markdown', () => {
+    const result = execCmd<DocsGenerateResult>('docs generate --format markdown --json', {
+      ensureExitCode: 0,
+    }).jsonOutput?.result;
+    expect(result?.format).to.equal('markdown');
+  });
 
-  // it('should generate docs with reset option and not contain previous files', () => {
-  //   fs.mkdirSync('docs/force-app/objects', { recursive: true });
-  //   fs.writeFileSync('docs/force-app/objects/CustomObject.json', '{test: true}');
+  it('should generate docs with reset option and not contain previous files', () => {
+    // fs.mkdirSync('docs/force-app/objects', { recursive: true });
+    // fs.writeFileSync('docs/force-app/objects/CustomObject.json', '{test: true}');
 
-  //   const { result } = execCmd<DocsGenerateResult>('docs generate --reset --json', {
-  //     ensureExitCode: 0,
-  //   }).jsonOutput;
+    const result = execCmd<DocsGenerateResult>('docs generate --reset --json', {
+      ensureExitCode: 0,
+    }).jsonOutput?.result;
 
-  //   try {
-  //     fs.readFileSync('docs/sample-app/objects/CustomObject.json');
-  //   } catch (err) {
-  //     error = true;
-  //   }
+    // try {
+    //   fs.readFileSync('docs/sample-app/objects/CustomObject.json');
+    // } catch (err) {
+    //   error = true;
+    // }
 
-  //   expect(result.outputdir).to.equal('docs');
-  //   expect(result.format).to.equal('json');
-  //   expect(error).to.be.true;
-  // });
+    expect(result?.outputdir).to.equal('docs');
+    expect(result?.format).to.equal('json');
+    // expect(error).to.be.true;
+  });
 });
