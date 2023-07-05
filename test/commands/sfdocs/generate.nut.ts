@@ -1,6 +1,6 @@
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { DocsGenerateResult } from '../../../src/commands/sfdocs/generate';
+import { DocsGenerateResult } from '../../../src/commands/docs/generate';
 
 let testSession: TestSession;
 // let error: boolean;

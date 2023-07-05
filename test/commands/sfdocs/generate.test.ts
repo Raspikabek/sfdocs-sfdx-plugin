@@ -3,7 +3,7 @@ import { TestSession } from '@salesforce/cli-plugins-testkit';
 // import { TestContext } from '@salesforce/core/lib/testSetup';
 import { expect } from 'chai';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
-import Generate from '../../../src/commands/sfdocs/generate';
+import Generate from '../../../src/commands/docs/generate';
 
 describe('Generate Docs', () => {
   // const $$ = new TestContext();
