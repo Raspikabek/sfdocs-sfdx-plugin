@@ -1,14 +1,42 @@
-# sfdocs
+# sfdocs-sfdx-plugin
 
-[![NPM](https://img.shields.io/npm/v/sfdocs.svg?label=sfdocs)](https://www.npmjs.com/package/sfdocs) [![Downloads/week](https://img.shields.io/npm/dw/sfdocs.svg)](https://npmjs.org/package/sfdocs) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/sfdocs/main/LICENSE.txt)
+Salesforce Documentation Generator plugin for sfdx
+
+[![Version](https://img.shields.io/npm/v/sfdocs-sfdx-plugin.svg)](https://npmjs.org/package/sfdocs-sfdx-plugin)
+[![Downloads/week](https://img.shields.io/npm/dw/sfdocs-sfdx-plugin)](https://npmjs.org/package/sfdocs-sfdx-plugin)
+[![license: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/aeeb80ba-211c-4b4c-a061-5af4ce9bbb2c/deploy-status)](https://app.netlify.com/sites/sfdocs/deploys)
+
+## Overview
+
+Check the Documentation in [sfdocs.netlify.app](http://sfdocs.netlify.app/)
+
+Generate documentation given the source content of your project.
+
+Content will be generated in the following structure:
+
+```sh
+docs/ # root folder defined by <outputdir> flag
+  force-app/ # one folder per package in the sfdx-project
+    profiles/ # folder per MetadataTypeInfo
+      Admin.md # md file per element
+      MyCustomProfile.md
+    objects/
+      Account.md
+      CustomObject.md
+    <metadata-type>/
+      <element>.md
+  awesome-app/ # my second package in the project
+    objects/
+      ...
+  ...
+```
+
+This will bring the possibility to publish or import this content in public/private documentation pages for your own project.
 
 ## Install
 
 ```bash
-# with sfdx
-sfdx plugins install sfdocs-sfdx-plugin
-
-#with sf
 sf plugins install sfdocs-sfdx-plugin
 ```
 
@@ -18,7 +46,7 @@ Please report any issues at https://github.com/raspikabek/sfdocs-sfdx-plugin/iss
 
 ## Contributing
 
-1. Please read our [Code of Conduct](CODE_OF_CONDUCT.md)
+1. Please read our [Code of Conduct](CODE_OF_CONDUCT.md) -- _under construction_
 2. Create a new issue before starting your project so that we can keep track of
    what you are trying to add/fix. That way, we can also offer suggestions or
    let you know if there is already an effort in progress.
