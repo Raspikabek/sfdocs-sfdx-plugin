@@ -1,7 +1,12 @@
 {
   "name": "sfdocs-sfdx-plugin",
   "description": "Salesforce Documentation Generator from local metadata",
-  "version": "0.0.1",
+  "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raspikabek/sfdocs-sfdx-plugin"
+  },
+  "homepage": "https://sfdocs.netlify.app",
   "dependencies": {
     "@oclif/core": "^2.8.11",
     "@salesforce/core": "^4.3.5",
@@ -73,8 +78,8 @@
       "@oclif/plugin-help"
     ],
     "topics": {
-      "sfdocs": {
-        "description": "Commands to generate documentation files of your sfdx project."
+      "docs": {
+        "description": "Commands to generate documentation from your sfdx project."
       }
     }
   },

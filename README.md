@@ -2,63 +2,19 @@
 
 [![NPM](https://img.shields.io/npm/v/sfdocs.svg?label=sfdocs)](https://www.npmjs.com/package/sfdocs) [![Downloads/week](https://img.shields.io/npm/dw/sfdocs.svg)](https://npmjs.org/package/sfdocs) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/sfdocs/main/LICENSE.txt)
 
-## Using the template
-
-This repository provides a template for creating a plugin for the Salesforce CLI. To convert this template to a working plugin:
-
-1. Please get in touch with the Platform CLI team. We want to help you develop your plugin.
-2. Generate your plugin:
-
-   ```
-   sf plugins install dev
-   sf dev generate plugin
-
-   git init -b main
-   git add . && git commit -m "chore: initial commit"
-   ```
-
-3. Create your plugin's repo in the salesforcecli github org
-4. When you're ready, replace the contents of this README with the information you want.
-
-## Learn about `sf` plugins
-
-Salesforce CLI plugins are based on the [oclif plugin framework](<(https://oclif.io/docs/introduction.html)>). Read the [plugin developer guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_plugins.meta/sfdx_cli_plugins/cli_plugins_architecture_sf_cli.htm) to learn about Salesforce CLI plugin development.
-
-This repository contains a lot of additional scripts and tools to help with general Salesforce node development and enforce coding standards. You should familiarize yourself with some of the [node developer packages](#tooling) used by Salesforce.
-
-Additionally, there are some additional tests that the Salesforce CLI will enforce if this plugin is ever bundled with the CLI. These test are included by default under the `posttest` script and it is required to keep these tests active in your plugin if you plan to have it bundled.
-
-### Tooling
-
-- [@salesforce/core](https://github.com/forcedotcom/sfdx-core)
-- [@salesforce/kit](https://github.com/forcedotcom/kit)
-- [@salesforce/sf-plugins-core](https://github.com/salesforcecli/sf-plugins-core)
-- [@salesforce/ts-types](https://github.com/forcedotcom/ts-types)
-- [@salesforce/ts-sinon](https://github.com/forcedotcom/ts-sinon)
-- [@salesforce/dev-config](https://github.com/forcedotcom/dev-config)
-- [@salesforce/dev-scripts](https://github.com/forcedotcom/dev-scripts)
-
-### Hooks
-
-For cross clouds commands, e.g. `sf env list`, we utilize [oclif hooks](https://oclif.io/docs/hooks) to get the relevant information from installed plugins.
-
-This plugin includes sample hooks in the [src/hooks directory](src/hooks). You'll just need to add the appropriate logic. You can also delete any of the hooks if they aren't required for your plugin.
-
-# Everything past here is only a suggestion as to what should be in your specific plugin's description
-
-This plugin is bundled with the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli). For more information on the CLI, read the [getting started guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm).
-
-We always recommend using the latest version of these commands bundled with the CLI, however, you can install a specific version or tag if needed.
-
 ## Install
 
 ```bash
-sf plugins install sfdocs@x.y.z
+# with sfdx
+sfdx plugins install sfdocs-sfdx-plugin
+
+#with sf
+sf plugins install sfdocs-sfdx-plugin
 ```
 
 ## Issues
 
-Please report any issues at https://github.com/forcedotcom/cli/issues
+Please report any issues at https://github.com/raspikabek/sfdocs-sfdx-plugin/issues
 
 ## Contributing
 
@@ -71,13 +27,7 @@ Please report any issues at https://github.com/forcedotcom/cli/issues
 5. Create a _topic_ branch in your fork. Note, this step is recommended but technically not required if contributing using a fork.
 6. Edit the code in your fork.
 7. Write appropriate tests for your changes. Try to achieve at least 95% code coverage on any new code. No pull request will be accepted without unit tests.
-8. Sign CLA (see [CLA](#cla) below).
-9. Send us a pull request when you are done. We'll review your code, suggest any needed changes, and merge it in.
-
-### CLA
-
-External contributors will be required to sign a Contributor's License
-Agreement. You can do so by going to https://cla.salesforce.com/sign-cla.
+8. Send us a pull request when you are done. We'll review your code, suggest any needed changes, and merge it in.
 
 ### Build
 
@@ -85,7 +35,7 @@ To build the plugin locally, make sure to have yarn installed and run the follow
 
 ```bash
 # Clone the repository
-git clone git@github.com:salesforcecli/sfdocs
+git clone git@github.com:raspikabek/sfdocs-sfdx-plugin
 
 # Install the dependencies and compile
 yarn && yarn build
@@ -95,7 +45,7 @@ To use your plugin, run using the local `./bin/dev` or `./bin/dev.cmd` file.
 
 ```bash
 # Run using local run file.
-./bin/dev hello world
+./bin/dev docs
 ```
 
 There should be no differences when running via the Salesforce CLI or using the local run file. However, it can be useful to link the plugin to do some additional testing or run your commands from anywhere on your machine.
@@ -111,75 +61,69 @@ sf plugins
 
 <!-- commands -->
 
-- [`sf sfdocs generate`](#sf-sfdocs-generate)
+- [`sf docs generate`](#sf-docs-generate)
 
-## `sf sfdocs generate`
+## `sf docs generate`
 
-Generates documentation of your project.
+Generate documentation of your project in a particular format and based on Handlebar templates
 
 ```
 USAGE
-  $ sf sfdocs generate [--json] [-d <value>] [-f json|markdown] [-p <value>] [-i <value>] [--reset]
+  $ sf docs generate [--json] [-d <value>] [-f json|markdown] [-p <value>] [-i <value>] [--reset] [--templates-path
+    <value>] [--helpers-path <value>]
 
 FLAGS
   -d, --output-dir=<value>      [default: docs] Target directory to store the output documentation files
   -f, --format=<option>         [default: json] The result format stored in the output directory.
                                 <options: json|markdown>
-  -i, --ignore-type=<value>...  List of metadata types to ignore. Valid values are Metadata Type Info names or folder
-                                names. Example: (CustomApplication or application, CustomObject or objects)
+  -i, --ignore-type=<value>...  List of metadata types to ignore. Valid values are Metadata Type names or folder names.
+                                Example: (CustomApplication or applications, CustomObject or objects)
   -p, --package=<value>...      Name of the package to generate the documentation from. Allows multiple packages. Leave
                                 it empty to generate documentation from all existing packages in your sfdx-project.json
                                 file
-  --reset                       Removes the existing target docs folder.
+  --helpers-path=<value>        Custom methods can override existing default methods, the rest will be merged and will
+                                coexist with the default helpers.
+  --reset                       Removes the existing target docs folder before generating the new content
+  --templates-path=<value>      Path to folder with custom templates.
 
 GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Generates documentation of your project.
+  Generate documentation of your project in a particular format and based on Handlebar templates
 
-  Generates documentation under a folder in a particular format based on your project local metadata.
+  Documentation is generated based on your local source code. Supports multi-package solutions, custom templates and
+  custom handlebar helpers. Read more in https://sfdocs.netlify.app
 
 EXAMPLES
   - Generate documentation from all packages in your local project
-    sf sfdocs generate
+    sf docs generate
   - Generate documentation from one package in your local project
-    sf sfdocs generate --packages force-app
+    sf docs generate --packages force-app
   - Generate documentation without CustomObjects
-  $ sf sfdocs generate --ignoretypes objects
+  $ sf docs generate --ignoretypes objects
+  - Generate documentation with custom templates
+  $ sf docs generate --templates-path config/templates
+  - Generate documentation with helpers
+  $ sf docs generate --helpers-path config/helpers.ts
 
 FLAG DESCRIPTIONS
   -d, --output-dir=<value>  Target directory to store the output documentation files
 
-    The target directory will create a folder package within your project and inside the appropriate Metadata Type
-    structure. Example:
-
-    sf sfdocs generate -d docs -p force-app -p labels-app
-
-    Output:
-    docs/
-    ..force-app/
-    ..../objects/
-    ....../Account.md
-    ....../Contact.md
-    ..../profiles/
-    ....../Admin.md
-    ..labels-app/
-    ..../labels/
-    ....../CustomLabels.md
+    It will create a folder per sfdx package within your project and inside the appropriate Metadata Type structure.
 
   -i, --ignore-type=<value>...
 
-    List of metadata types to ignore. Valid values are Metadata Type Info names or folder names. Example:
-    (CustomApplication or application, CustomObject or objects)
+    List of metadata types to ignore. Valid values are Metadata Type names or folder names. Example: (CustomApplication
+    or applications, CustomObject or objects)
 
     Examples:
 
     Ignore one type:
-    sf sfdocs generate --ignoretype objects
+    sf docs generate --ignoretype CustomObject
 
     Ignore multiple types:
-    sf sfdocs generate -i objects -i applications
+    sf docs generate -i objects -i applications
 
   -p, --package=<value>...
 
@@ -190,7 +134,7 @@ FLAG DESCRIPTIONS
 
     Example with multiple packages:
 
-    sf sfdocs generate -p main-app -p reports-app
+    sf docs generate -p main-app -p reports-app
 ```
 
 <!-- commandsstop -->
