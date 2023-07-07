@@ -8,7 +8,7 @@ Documentation is generated based on your local source code. Supports multi-packa
 
 # flags.format.summary
 
-The result format stored in the output directory.
+(in-progress) The result format stored in the output directory.
 
 # flags.package.summary
 
@@ -24,7 +24,7 @@ Example with multiple packages:
 
 # flags.ignoretype.summary
 
-List of metadata types to ignore. Valid values are Metadata Type names or folder names. Example: (CustomApplication or applications, CustomObject or objects)
+(in-progress) List of metadata types to ignore. Valid values are Metadata Type names or folder names. Example: (CustomApplication or applications, CustomObject or objects)
 
 # flags.ignoretype.description
 
