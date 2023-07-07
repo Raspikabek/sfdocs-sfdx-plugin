@@ -1,15 +1,9 @@
 import * as path from 'path';
 import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { Messages, NamedPackageDir } from '@salesforce/core';
-import { MetadataResolver } from '@salesforce/source-deploy-retrieve';
 import * as fs from 'graceful-fs';
 import { TemplateInfo } from '../../service/templateInfo';
-import {
-  filterSourceComponentWithTemplateInfo,
-  getPackageFolders,
-  getFormatExtension,
-  convertPackageComponents,
-} from '../../service/utils';
+import { generateDocsPerPackageInParallel, getFormatExtension } from '../../service/utils';
 import { HelperModule } from '../../service/helpersModule';
 import * as defaultHelpers from '../../helpers/default';
 
@@ -19,7 +13,6 @@ import * as defaultHelpers from '../../helpers/default';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('sfdocs-sfdx-plugin', 'sfdocs.generate');
-const resolver = new MetadataResolver();
 
 export type DocsGenerateResult = {
   outputdir: string;
@@ -58,6 +51,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
       summary: messages.getMessage('flags.ignoretype.summary'),
       description: messages.getMessage('flags.ignoretype.description'),
       multiple: true,
+      default: [],
     }),
     reset: Flags.boolean({
       summary: messages.getMessage('flags.reset.summary'),
@@ -92,12 +86,13 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
       };
     }
 
-    await this.generateDocsPerPackageInParallel(
+    await generateDocsPerPackageInParallel(
       pkgs,
       templates,
       flags['output-dir'],
       helpers,
-      getFormatExtension(flags.format)
+      getFormatExtension(flags.format),
+      flags['ignore-type']
     );
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
@@ -140,26 +135,5 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
       });
     }
     return templates;
-  }
-
-  private async generateDocsPerPackageInParallel(
-    packages: NamedPackageDir[],
-    templates: TemplateInfo[],
-    outputDirectory: string,
-    helpers: HelperModule,
-    format: string
-  ): Promise<void> {
-    const generatorPromises = packages.map(async (pkg) => {
-      const pkgFolders = await getPackageFolders(pkg.path);
-      this.log(`Package ${pkg.name} content: `, pkgFolders);
-
-      const components = resolver.getComponentsFromPath(pkg.path);
-      const filteredComponents = filterSourceComponentWithTemplateInfo(components, templates);
-      await convertPackageComponents(pkg, filteredComponents, outputDirectory, templates, helpers, format);
-      return pkgFolders;
-    });
-
-    await Promise.all(generatorPromises);
-    // return null;
   }
 }

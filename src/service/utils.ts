@@ -1,13 +1,38 @@
 import * as path from 'path';
 import * as fs from 'graceful-fs';
 import { NamedPackageDir } from '@salesforce/core';
-import { SourceComponent, MetadataConverter } from '@salesforce/source-deploy-retrieve';
+import { SourceComponent, MetadataConverter, MetadataResolver } from '@salesforce/source-deploy-retrieve';
 import * as Handlebars from 'handlebars';
 import { error } from '@oclif/core/lib/errors';
 import { HelperModule } from './helpersModule';
 import { TemplateInfo } from './templateInfo';
 
 const converter = new MetadataConverter();
+
+export async function generateDocsPerPackageInParallel(
+  packages: NamedPackageDir[],
+  templates: TemplateInfo[],
+  outputDirectory: string,
+  helpers: HelperModule,
+  format: string,
+  ignoredTypes: string[]
+): Promise<void> {
+  const resolver = new MetadataResolver();
+
+  const generatorPromises = packages.map(async (pkg) => {
+    const pkgFolders = await getPackageFolders(pkg.path);
+    // this.log(`Package ${pkg.name} content: `, pkgFolders);
+
+    const components = resolver.getComponentsFromPath(pkg.path);
+    const filteredComponentsByTemplates = filterSourceComponentWithTemplateInfo(components, templates);
+    const filteredComponents = filterSourceComponentsByTypes(filteredComponentsByTemplates, ignoredTypes);
+    await convertPackageComponents(pkg, filteredComponents, outputDirectory, templates, helpers, format);
+    return pkgFolders;
+  });
+
+  await Promise.all(generatorPromises);
+  // return null;
+}
 
 export const getFormatExtension = (format: string): string => {
   switch (format) {
@@ -35,6 +60,11 @@ export function filterSourceComponentWithTemplateInfo(
 ): SourceComponent[] {
   return components.filter((c) => templateInfos.some((t) => t.name === c.type.directoryName));
 }
+
+export const filterSourceComponentsByTypes = (components: SourceComponent[], mtdTypes: string[]): SourceComponent[] => {
+  const result = components.filter((c) => !mtdTypes.includes(c.type.name) && !mtdTypes.includes(c.type.directoryName));
+  return result;
+};
 
 export async function convertPackageComponents(
   pkg: NamedPackageDir,

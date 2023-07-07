@@ -24,7 +24,7 @@ Example with multiple packages:
 
 # flags.ignoretype.summary
 
-(in-progress) List of metadata types to ignore. Valid values are Metadata Type names or folder names. Example: (CustomApplication or applications, CustomObject or objects)
+List of metadata types to ignore. Valid values are Metadata Type names or folder names. Example: (CustomApplication or applications, CustomObject or objects)
 
 # flags.ignoretype.description
 
