@@ -8,7 +8,7 @@ Documentation is generated based on your local source code. Supports multi-packa
 
 # flags.format.summary
 
-(in-progress) The result format stored in the output directory.
+The result format stored in the output directory.
 
 # flags.package.summary
 
