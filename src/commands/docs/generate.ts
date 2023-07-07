@@ -7,6 +7,7 @@ import { TemplateInfo } from '../../service/templateInfo';
 import {
   filterSourceComponentWithTemplateInfo,
   getPackageFolders,
+  getFormatExtension,
   convertPackageComponents,
 } from '../../service/utils';
 import { HelperModule } from '../../service/helpersModule';
@@ -91,7 +92,13 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
       };
     }
 
-    await this.generateDocsPerPackageInParallel(pkgs, templates, flags['output-dir'], helpers);
+    await this.generateDocsPerPackageInParallel(
+      pkgs,
+      templates,
+      flags['output-dir'],
+      helpers,
+      getFormatExtension(flags.format)
+    );
     this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
     return {
       outputdir: flags['output-dir'],
@@ -139,7 +146,8 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     packages: NamedPackageDir[],
     templates: TemplateInfo[],
     outputDirectory: string,
-    helpers: HelperModule
+    helpers: HelperModule,
+    format: string
   ): Promise<void> {
     const generatorPromises = packages.map(async (pkg) => {
       const pkgFolders = await getPackageFolders(pkg.path);
@@ -147,7 +155,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
 
       const components = resolver.getComponentsFromPath(pkg.path);
       const filteredComponents = filterSourceComponentWithTemplateInfo(components, templates);
-      await convertPackageComponents(pkg, filteredComponents, outputDirectory, templates, helpers);
+      await convertPackageComponents(pkg, filteredComponents, outputDirectory, templates, helpers, format);
       return pkgFolders;
     });
 
