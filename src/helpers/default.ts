@@ -1,12 +1,12 @@
 export default {
-  uppercase(text: string): string {
+  uppercase(text: string | null | undefined): string {
     if (text === null || text === undefined) {
       return '';
     }
     return text.toUpperCase();
   },
 
-  lowercase(text: string): string {
+  lowercase(text: string | null | undefined): string {
     if (text === null || text === undefined) {
       return '';
     }
