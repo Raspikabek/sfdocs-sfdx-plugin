@@ -64,16 +64,16 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
 
   public async run(): Promise<DocsGenerateResult> {
     const { flags } = await this.parse(Generate);
-    this.spinner.start(
-      `Starting generation of Documentation in '${flags['output-dir']}' with '${flags.format}' format`
-    );
-
+    this.log(messages.getMessage('info.spinner.start.init', [flags['output-dir'], flags.format]));
+    this.spinner.start(messages.getMessage('info.spinner.start.preparation'));
     // TODO: following methods as promise all?
     await this.resetDocs();
     const pkgs = await this.getPackageDirectories();
     const templates = await getTemplatesInfo(flags['templates-path']);
     const helpers = await loadHelpers(flags['helpers-path']);
+    this.spinner.stop();
 
+    this.spinner.start(messages.getMessage('info.spinner.start.processing', [flags.format]));
     await generateDocsPerPackageInParallel(
       pkgs,
       templates,
@@ -82,7 +82,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
       getFormatExtension(flags.format),
       flags['ignore-type']
     );
-    this.log(messages.getMessage('info.generate', [flags['output-dir'], flags.format]));
+    this.spinner.stop();
     return {
       outputdir: flags['output-dir'],
       format: flags.format,
