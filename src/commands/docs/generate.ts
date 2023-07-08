@@ -66,11 +66,13 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     const { flags } = await this.parse(Generate);
     this.log(messages.getMessage('info.spinner.start.init', [flags['output-dir'], flags.format]));
     this.spinner.start(messages.getMessage('info.spinner.start.preparation'));
-    // TODO: following methods as promise all?
-    await this.resetDocs();
-    const pkgs = await this.getPackageDirectories();
-    const templates = await getTemplatesInfo(flags['templates-path']);
-    const helpers = await loadHelpers(flags['helpers-path']);
+
+    const [pkgs, templates, helpers] = await Promise.all([
+      this.getPackageDirectories(),
+      getTemplatesInfo(flags['templates-path']),
+      loadHelpers(flags['helpers-path']),
+      this.resetDocs(),
+    ]);
     this.spinner.stop();
 
     this.spinner.start(messages.getMessage('info.spinner.start.processing', [flags.format]));
