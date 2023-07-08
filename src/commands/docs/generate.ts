@@ -1,11 +1,9 @@
-import * as path from 'path';
 import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 import { Messages, NamedPackageDir } from '@salesforce/core';
 import * as fs from 'graceful-fs';
-import { TemplateInfo } from '../../service/templateInfo';
+import { getTemplatesInfo } from '../../service/templateInfo';
 import { generateDocsPerPackageInParallel, getFormatExtension } from '../../service/utils';
-import { HelperModule } from '../../service/helpersModule';
-import * as defaultHelpers from '../../helpers/default';
+import { loadHelpers } from '../../service/helpersModule';
 
 /**
  * Using Metadata Registry: https://github.com/forcedotcom/source-deploy-retrieve/blob/main/HANDBOOK.md#metadata-registry
@@ -66,25 +64,15 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
 
   public async run(): Promise<DocsGenerateResult> {
     const { flags } = await this.parse(Generate);
+    this.spinner.start(
+      `Starting generation of Documentation in '${flags['output-dir']}' with '${flags.format}' format`
+    );
 
     // TODO: following methods as promise all?
-    await this.removeFolderIfExists();
+    await this.resetDocs();
     const pkgs = await this.getPackageDirectories();
-    const templates = await this.getTemplatesInfo();
-    let handlebarHelpersPath = '';
-    let helpers: HelperModule = defaultHelpers.default as HelperModule;
-    if (flags['helpers-path']) {
-      handlebarHelpersPath = path.resolve(flags['helpers-path']);
-      // TODO: find a way to import dynamically better with no lint errors & from JS file and not TS?
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const customHelpersModule = await import(handlebarHelpersPath);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const newHelpers: HelperModule = customHelpersModule.default as HelperModule;
-      helpers = {
-        ...helpers,
-        ...newHelpers,
-      };
-    }
+    const templates = await getTemplatesInfo(flags['templates-path']);
+    const helpers = await loadHelpers(flags['helpers-path']);
 
     await generateDocsPerPackageInParallel(
       pkgs,
@@ -102,7 +90,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     };
   }
 
-  private async removeFolderIfExists(): Promise<void> {
+  private async resetDocs(): Promise<void> {
     const { flags } = await this.parse(Generate);
     if (flags.reset && fs.existsSync(flags['output-dir'])) {
       fs.rmSync(flags['output-dir'], { recursive: true });
@@ -118,22 +106,5 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     }
 
     return this.project.getUniquePackageDirectories().filter((element) => packages.includes(element.name));
-  }
-
-  private async getTemplatesInfo(): Promise<TemplateInfo[]> {
-    const { flags } = await this.parse(Generate);
-    const templatesPath =
-      flags['templates-path'] != null ? flags['templates-path'] : path.resolve(__dirname, '..', '..', 'templates');
-    const paths = await fs.promises.readdir(templatesPath, {});
-    const templates: TemplateInfo[] = [];
-    for (const template of paths) {
-      const fileNameWithExtension = path.basename(template);
-      templates.push({
-        name: fileNameWithExtension.slice(0, fileNameWithExtension.lastIndexOf('.')),
-        path: path.join(templatesPath, template),
-        type: path.extname(template).slice(1),
-      });
-    }
-    return templates;
   }
 }
