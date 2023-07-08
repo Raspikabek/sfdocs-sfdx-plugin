@@ -86,8 +86,14 @@ It will create a folder per sfdx package within your project and inside the appr
 
 <%= config.bin %> <%= command.id %> --helpers-path config/helpers.ts
 
-# info.generate
+# info.spinner.start.init
 
-Documentation generated!
-Path: %s
-Format: %s
+Starting generation of Documentation in '%s' with '%s' format
+
+# info.spinner.start.preparation
+
+Getting defaults & project packages
+
+# info.spinner.start.processing
+
+Reading source code & parsing into %s
