@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.4.0...v0.4.1) (2023-07-09)
+
+
+### Bug Fixes
+
+* remove commented code ([96ae005](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/96ae005c20cd4b7ce3ab3ab0b98506a57513241f))
+
 ## [0.4.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.3.3...v0.4.0) (2023-07-09)
 
 
