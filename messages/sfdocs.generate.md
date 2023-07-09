@@ -1,10 +1,10 @@
 # summary
 
-Generate documentation of your project in a particular format and based on Handlebar templates
+Generate documentation of your project in a particular format and based on HandlebarJS templates
 
 # description
 
-Documentation is generated based on your local source code. Supports multi-package solutions, custom templates and custom handlebar helpers. Read more in https://sfdocs.netlify.app
+Documentation is generated based on your local source code. Supports multi-package projects, custom templates and custom handlebars helpers. Read more in https://sfdocs.netlify.app
 
 # flags.format.summary
 
