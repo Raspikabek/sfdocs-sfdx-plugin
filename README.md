@@ -11,7 +11,7 @@ Salesforce Documentation Generator plugin for sfdx
 
 Check the Documentation in [sfdocs.netlify.app](http://sfdocs.netlify.app/)
 
-Generate documentation given the source content of your project.
+Generate documentation given the source content of your project. We use [Handlebarsjs](https://handlebarsjs.com/) to parse the metadata into the templates format.
 
 Content will be generated in the following structure:
 
