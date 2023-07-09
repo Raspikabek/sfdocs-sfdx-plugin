@@ -23,6 +23,14 @@ describe('docs generate NUTs', () => {
     expect(result?.format).to.equal('json');
   });
 
+  it('should generate in json and sfdocs folder', () => {
+    const result = execCmd<DocsGenerateResult>('docs generate --output-dir sfdocs --format markdown --json', {
+      ensureExitCode: 0,
+    }).jsonOutput?.result;
+    expect(result?.outputdir).to.equal('sfgit stadocs');
+    expect(result?.format).to.equal('json');
+  });
+
   it('should generate docs in markdown', () => {
     const result = execCmd<DocsGenerateResult>('docs generate --format markdown --json', {
       ensureExitCode: 0,
