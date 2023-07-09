@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.3.0...v0.3.1) (2023-07-09)
+
+
+### Bug Fixes
+
+* amend release workflow step ([c4c96e1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/c4c96e16ec04108dc453d68203055ab00bd1ae87))
+
 ## [0.3.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.2.1...v0.3.0) (2023-07-09)
 
 
