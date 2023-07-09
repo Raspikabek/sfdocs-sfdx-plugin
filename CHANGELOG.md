@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.3.3...v0.4.0) (2023-07-09)
+
+
+### Features
+
+* add nut test scenario for json format ([5f0509f](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/5f0509fae614100cee5f931ee4f9ce5b2977c0bb))
+
+
+### Bug Fixes
+
+* amend output dir expectation ([8e99c32](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/8e99c32b677606cfc0f74ddfc77ebc205c6f8b47))
+* amend test class command ([90bdbfd](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/90bdbfdc3a529b89c883c137a053c794099f5cae))
+
 ## [0.3.3](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.3.2...v0.3.3) (2023-07-09)
 
 
