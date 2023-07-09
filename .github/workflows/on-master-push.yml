@@ -32,9 +32,9 @@ jobs:
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
         if: ${{ steps.release.outputs.release_created }}
-      - run: npm ci
+      - run: yarn
         if: ${{ steps.release.outputs.release_created }}
-      - run: npm publish --tag latest-rc
+      - run: yarn npm publish --access public --tag latest-rc
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         if: ${{ steps.release.outputs.release_created }}
