@@ -1,0 +1,22 @@
+---
+name: Install
+description: Install dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "yarn-cache=$(yarn config get cacheFolder)" >> "$GITHUB_OUTPUT"
+      shell: bash
+
+    - uses: actions/cache@v3
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.yarn-cache }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Install dependencies
+      run: yarn install --immutable --check-cache
+      shell: bash
+      env:
+        HUSKY: '0' # By default do not run HUSKY install
