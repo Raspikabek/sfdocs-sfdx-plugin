@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.4.1...v0.4.2) (2023-07-09)
+
+
+### Bug Fixes
+
+* rename postinstall script as prepare ([c3d6828](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/c3d682891e42b70bddec3d0bec7a814dd7a3ee3c))
+
 ## [0.4.1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.4.0...v0.4.1) (2023-07-09)
 
 
