@@ -34,7 +34,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - run: yarn
         if: ${{ steps.release.outputs.release_created }}
-      - run: yarn npm publish --access public --tag latest-rc
+      - run: yarn publish --access public --tag latest-rc
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         if: ${{ steps.release.outputs.release_created }}
