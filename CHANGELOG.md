@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.3.1...v0.3.2) (2023-07-09)
+
+
+### Bug Fixes
+
+* amend yarn build & npm publish command ([e99c9e2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/e99c9e2820f8fceb76f98706c1d03ba73881f7e0))
+
 ## [0.3.1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.3.0...v0.3.1) (2023-07-09)
 
 
