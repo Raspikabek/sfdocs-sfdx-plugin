@@ -31,7 +31,7 @@ jobs:
       #   continue-on-error: true
 
       - name: Functional test
-        run: yarn test:nut
+        run: yarn test:nuts
 
       # - uses: actions/upload-artifact@v3
       #   with:
