@@ -22,18 +22,18 @@ jobs:
         run: yarn pack
 
       - name: Unit test
-        run: yarn test:unit:coverage --runInBand
+        run: yarn test
 
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-        continue-on-error: true
+      # - name: Upload coverage
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #   continue-on-error: true
 
       - name: Functional test
         run: yarn test:nut
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: coverage-test-report
-          path: reports/coverage
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: coverage-test-report
+      #     path: reports/coverage
