@@ -103,7 +103,7 @@ async function parseComponent(
   const componentContent = await component.parseXml();
 
   if (format === 'json') {
-    return JSON.stringify(component, null, 2);
+    return JSON.stringify(componentContent, null, 2);
   }
 
   if (Object.keys(helpers).length > 0) {
