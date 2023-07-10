@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.4.2...v0.5.0) (2023-07-10)
+
+
+### Features
+
+* add how to example Template ([5385b74](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/5385b748737bf0ecbbeac7a952dc6b122763e7ab))
+* remove default html template ([fbc92ea](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/fbc92eaf494d6fc8f45e6cf049f2f551d4edb151))
+* update default object markdown template ([691242a](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/691242aa63aedc1147326043cbd233294dfb20a1))
+* update default profile  markdown template ([3745131](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/3745131f69793d093c7f6469786c176d97139c06))
+
+
+### Bug Fixes
+
+* json format to store componentContent instead of SourceComponent ([abcd8a1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/abcd8a193924d7d27faf9a863803585eac2e6553))
+
 ## [0.4.2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.4.1...v0.4.2) (2023-07-09)
 
 
