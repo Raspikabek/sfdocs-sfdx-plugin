@@ -36,35 +36,12 @@ User License: {{Profile.userLicense}}
 | {{application}} | {{default}} | {{visible}} |
 {{/each}}
 
-<!-- 
-## Apex Classes
-| Class Name | Enabled? |
-| ---- | ---- |
-{{#each Profile.classAccesses}}
-| {{apexClass}} | {{enabled}} |
-{{/each}} -->
-
 ## Custom Metadata Type Access
 | Custom Metadata | Enabled |
 | ---- | ---- |
 {{#each Profile.customMetadataTypeAccesses}}
 | {{name}} | {{enabled}} |
 {{/each}}
-
-## Object Permissions 2
-{{#each Profile.objectPermissions}}
-### Object Name: {{object}}
-* Read: {{allowRead}}
-* Edit: {{allowRead}}
-* Create: {{allowRead}}
-* Delete: {{allowRead}}
-* View All Records: {{allowRead}}
-* Modify All Records: {{allowRead}}
-
-### {{object}} field permissions
-
-{{/each}}
-
 
 ## Record Type Visibilities
 | Record Type | Visible | Default | Person Account Default?
