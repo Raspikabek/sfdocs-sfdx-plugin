@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.4.2...v0.4.3) (2023-07-10)
+
+
+### Bug Fixes
+
+* json format to store componentContent instead of SourceComponent ([abcd8a1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/abcd8a193924d7d27faf9a863803585eac2e6553))
+
 ## [0.4.2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.4.1...v0.4.2) (2023-07-09)
 
 
