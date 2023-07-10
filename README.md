@@ -40,6 +40,23 @@ This will bring the possibility to publish or import this content in public/priv
 sf plugins install sfdocs-sfdx-plugin
 ```
 
+## Handlebar Template Example for objects.md
+
+```
+# {{CustomObject.label}}
+
+## Fields
+
+| Field Name | Label | Type | Required | Unique | Length | Precision,Scale | Reference To| Default Value | Formula | Formula Treat Blank As |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Name | {{CustomObject.nameField.Label}} | {{CustomObject.nameField.type}} |
+{{#each CustomObject.fields}}
+| {{fullName}} | {{label}} | {{type}} | {{required}} | {{unique}} | {{length}} | {{precision}},{{scale}} | {{referenceTo}} | {{defaultValue}} | {{formula}} | {{formulaTreatBlanksAs}} |
+{{/each}}
+```
+
+If you don't know the structure of each MetadataType is recommended to generate first in JSON format and review the results before buidling a custom template.
+
 ## Issues
 
 Please report any issues at https://github.com/raspikabek/sfdocs-sfdx-plugin/issues
