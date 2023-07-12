@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.5.0...v0.5.1) (2023-07-12)
+
+
+### Bug Fixes
+
+* add missing templates from build ([1e3011d](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/1e3011da2b1621ea5f61616bf654b0ec511f6d2d))
+* amend defaultHelpers import ([7778b2f](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/7778b2f70f7c606c62fa22b7b1bd20ee21567e50))
+* remove test build on master-push ([e6e192d](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/e6e192d03edcb024a4b9907e33df38382434567e))
+* update dependabot file + update checkout action to v3 ([0e3d82f](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/0e3d82f277ce26341abd26351eb2f552cd6bec4d))
+
 ## [0.5.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.4.2...v0.5.0) (2023-07-10)
 
 
