@@ -76,14 +76,18 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
     this.spinner.stop();
 
     this.spinner.start(messages.getMessage('info.spinner.start.processing', [flags.format]));
-    await generateDocsPerPackageInParallel(
-      pkgs,
-      templates,
-      flags['output-dir'],
-      helpers,
-      getFormatExtension(flags.format),
-      flags['ignore-type']
-    );
+    try {
+      await generateDocsPerPackageInParallel(
+        pkgs,
+        templates,
+        flags['output-dir'],
+        helpers,
+        getFormatExtension(flags.format),
+        flags['ignore-type']
+      );
+    } catch (err) {
+      this.log('Something wrong happened:', err);
+    }
     this.spinner.stop();
     return {
       outputdir: flags['output-dir'],
