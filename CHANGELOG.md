@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.5.0...v0.5.1) (2023-07-12)
+
+
+### Bug Fixes
+
+* add missing dependencies ([699a1f1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/699a1f143c7113e190969f144218a757d4fe1a2d))
+* remove test build on master-push ([fdd7bc2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/fdd7bc25996f44b60e2e71677fb16377a693da49))
+
 ## [0.5.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.4.2...v0.5.0) (2023-07-10)
 
 
