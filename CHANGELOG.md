@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.5.1...v0.5.2) (2023-07-12)
+
+
+### Bug Fixes
+
+* update dependabot file + update checkout action to v3 ([9db7525](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/9db7525110522bbfeec0a8f1eadbd633ee09ab60))
+* update dependencies + add error report ([44aa085](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/44aa08532c123775da8826ed7b4bdf943070196a))
+
 ## [0.5.1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.5.0...v0.5.1) (2023-07-12)
 
 
