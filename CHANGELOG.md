@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.6.0...v0.7.0) (2023-07-12)
+
+
+### Features
+
+* add copy templates during compilation ([a09a28e](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/a09a28ef54a926ab27b3b051435317642ad114cb))
+
 ## [0.6.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.5.1...v0.6.0) (2023-07-12)
 
 
