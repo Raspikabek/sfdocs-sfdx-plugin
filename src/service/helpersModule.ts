@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as defaultHelpers from '..//helpers/default';
+import * as defaultHelpers from '../helpers/default';
 
 export interface HelperModule {
   [key: string]: Handlebars.HelperDelegate;
