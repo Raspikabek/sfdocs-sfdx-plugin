@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.5.2...v0.5.3) (2023-07-12)
+
+
+### Bug Fixes
+
+* update yarn.lock ([0767394](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/076739473491c32f89edd48503cf0c9fa9746337))
+
 ## [0.5.2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.5.1...v0.5.2) (2023-07-12)
 
 
