@@ -63,32 +63,42 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
   };
 
   public async run(): Promise<DocsGenerateResult> {
-    const { flags } = await this.parse(Generate);
-    this.log(messages.getMessage('info.spinner.start.init', [flags['output-dir'], flags.format]));
-    this.spinner.start(messages.getMessage('info.spinner.start.preparation'));
+    try {
+      const { flags } = await this.parse(Generate);
+      this.log(messages.getMessage('info.spinner.start.init', [flags['output-dir'], flags.format]));
+      this.spinner.start(messages.getMessage('info.spinner.start.preparation'));
 
-    const [pkgs, templates, helpers] = await Promise.all([
-      this.getPackageDirectories(),
-      getTemplatesInfo(flags['templates-path']),
-      loadHelpers(flags['helpers-path']),
-      this.resetDocs(),
-    ]);
-    this.spinner.stop();
+      const [pkgs, templates, helpers] = await Promise.all([
+        this.getPackageDirectories(),
+        getTemplatesInfo(flags['templates-path']),
+        loadHelpers(flags['helpers-path']),
+        this.resetDocs(),
+      ]);
+      this.spinner.stop();
 
-    this.spinner.start(messages.getMessage('info.spinner.start.processing', [flags.format]));
-    await generateDocsPerPackageInParallel(
-      pkgs,
-      templates,
-      flags['output-dir'],
-      helpers,
-      getFormatExtension(flags.format),
-      flags['ignore-type']
-    );
-    this.spinner.stop();
+      this.spinner.start(messages.getMessage('info.spinner.start.processing', [flags.format]));
+      await generateDocsPerPackageInParallel(
+        pkgs,
+        templates,
+        flags['output-dir'],
+        helpers,
+        getFormatExtension(flags.format),
+        flags['ignore-type']
+      );
+      this.spinner.stop();
+      return {
+        outputdir: flags['output-dir'],
+        format: flags.format,
+        packages: pkgs,
+      };
+    } catch (err) {
+      this.spinner.stop('Woops! Something went wrong');
+      this.log('Error details:', err);
+    }
     return {
-      outputdir: flags['output-dir'],
-      format: flags.format,
-      packages: pkgs,
+      outputdir: 'error',
+      format: 'error',
+      packages: [],
     };
   }
 
