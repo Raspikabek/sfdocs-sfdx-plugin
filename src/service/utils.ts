@@ -103,7 +103,8 @@ async function parseComponent(
   format: string
 ): Promise<string> {
   const componentContent = await component.parseXml();
-
+  componentContent.fullName = component.fullName;
+  componentContent.name = component.name;
   if (format === 'json') {
     return JSON.stringify(componentContent, null, 2);
   }
