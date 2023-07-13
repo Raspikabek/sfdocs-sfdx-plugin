@@ -85,8 +85,10 @@ export async function convertPackageComponents(
   const resultsParsePromises = result.converted.map(async (component) => {
     const parsedContent = await parseComponent(component, templates, helpers, format);
     writeContent(parsedContent, component, format);
-    deleteFile(component.xml);
-
+    deleteFileOrDirectory(component.xml);
+    if (component.content) {
+      deleteFileOrDirectory(component.content);
+    }
     return parsedContent;
   });
 
@@ -134,9 +136,9 @@ const writeContent = (content: string, component: SourceComponent, extension: st
   fs.writeFileSync(path.join(directoryPath, fileName), content, 'utf-8');
 };
 
-const deleteFile = (filepath: string | undefined): void => {
+const deleteFileOrDirectory = (filepath: string | undefined): void => {
   if (filepath !== undefined) {
-    fs.unlinkSync(path.resolve(filepath));
+    fs.rmSync(filepath, { recursive: true });
   }
 };
 
