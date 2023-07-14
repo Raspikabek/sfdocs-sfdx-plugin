@@ -10,5 +10,5 @@
 | Full Name | Label | Default |
 | ---------- | ------ | ------- |
 {{#each GlobalValueSet.customValue}}
-| {{fullName}} | {{label}} | {{}} |
+| {{fullName}} | {{label}} | {{default}} |
 {{/each}}

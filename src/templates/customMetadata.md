@@ -6,6 +6,6 @@
 
 {{#each CustomMetadata.values}}
 - Field: {{field}}
-  - Value: {{value.#text}}
+  - Value: {{value.text}}
 {{/each}}
 
