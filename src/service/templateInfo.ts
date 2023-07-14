@@ -11,10 +11,18 @@ export function containsTemplateName(templates: TemplateInfo[], value: string): 
   return templates.some((template) => template.name === value);
 }
 
-export async function getTemplatesInfo(templatesPath: string | undefined): Promise<TemplateInfo[]> {
+export async function getTemplatesInfo(templatesPath: string | undefined, extension: string): Promise<TemplateInfo[]> {
+  if (extension === 'json') {
+    return [];
+  }
   const templatesDir = templatesPath !== undefined ? templatesPath : getDefaultTemplatesPath();
   const fileNames = await fs.promises.readdir(templatesDir, {});
-  return getTemplateInfos(fileNames, templatesDir);
+  const filteredFileNames = fileNames.filter(filterByExtension(extension));
+  return getTemplateInfos(filteredFileNames, templatesDir);
+}
+
+function filterByExtension(extension: string): (fileName: string) => boolean {
+  return (fileName: string) => path.extname(fileName).slice(1) === extension;
 }
 
 function getDefaultTemplatesPath(): string {
