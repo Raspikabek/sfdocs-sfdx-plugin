@@ -65,12 +65,13 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
   public async run(): Promise<DocsGenerateResult> {
     try {
       const { flags } = await this.parse(Generate);
+      const extension = getFormatExtension(flags.format);
       this.log(messages.getMessage('info.spinner.start.init', [flags['output-dir'], flags.format]));
       this.spinner.start(messages.getMessage('info.spinner.start.preparation'));
 
       const [pkgs, templates, helpers] = await Promise.all([
         this.getPackageDirectories(),
-        getTemplatesInfo(flags['templates-path']),
+        getTemplatesInfo(flags['templates-path'], extension),
         loadHelpers(flags['helpers-path']),
         this.resetDocs(),
       ]);
@@ -82,7 +83,7 @@ export default class Generate extends SfCommand<DocsGenerateResult> {
         templates,
         flags['output-dir'],
         helpers,
-        getFormatExtension(flags.format),
+        extension,
         flags['ignore-type']
       );
       this.spinner.stop();

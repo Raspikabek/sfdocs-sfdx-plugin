@@ -21,10 +21,9 @@ export async function generateDocsPerPackageInParallel(
 
   const generatorPromises = packages.map(async (pkg) => {
     const pkgFolders = await getPackageFolders(pkg.path);
-    // this.log(`Package ${pkg.name} content: `, pkgFolders);
-
     const components = resolver.getComponentsFromPath(pkg.path);
-    const filteredComponentsByTemplates = filterSourceComponentWithTemplateInfo(components, templates);
+    const filteredComponentsByTemplates =
+      format === 'json' ? components : filterSourceComponentWithTemplateInfo(components, templates);
     const filteredComponents = filterSourceComponentsByTypes(filteredComponentsByTemplates, ignoredTypes);
     await convertPackageComponents(pkg, filteredComponents, outputDirectory, templates, helpers, format);
     return pkgFolders;
