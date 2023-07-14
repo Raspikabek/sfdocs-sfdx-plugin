@@ -18,5 +18,17 @@ export default {
     return field.startsWith(`${objectName}.`);
   },
 
+  eq(a: string, b: string): boolean {
+    return a === b;
+  },
+
+  isArray(value: unknown): boolean {
+    return Array.isArray(value);
+  },
+
+  toArray(items: unknown): unknown[] {
+    return Array.isArray(items) ? items : [items];
+  },
+
   // Add more helper methods as needed
 };
