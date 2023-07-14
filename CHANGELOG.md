@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.8.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.7.0...v0.8.0) (2023-07-14)
+
+
+### Features
+
+* add applications default markdown template ([c51ef1c](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/c51ef1cb17e334163cb39eaeb7d3d51e114ac7d6))
+* add contentassets md template ([e2db250](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/e2db25016243af9009131d2296488fc205c2a4fd))
+* add default remoteSiteSettings.md template ([e0bd0b6](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/e0bd0b634c8b744a62d9939179c158638375cceb))
+* add default tabs.md template ([8a8df66](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/8a8df6654488728a22c81abf825bf041604f0d81))
+* add default templates batch 2 ([5fb87fa](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/5fb87faee18e9de90d2fbf4a5065ff98735fab55))
+* add eq, isArray, toArray helper methods ([cb39c9e](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/cb39c9eb2f412529f1a7e3718692836f4e69d9ee))
+* add layouts md template ([f323111](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/f3231116fbd886c2c286a7588aab8900a0e663b6))
+* add messageChannels md template ([dfc05f0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/dfc05f07ebfe25c8087d2b5a7a9015c7d2a99f6b))
+* add prompts md template ([9c66834](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/9c66834b929ba13b5c0480936406d7c697657545))
+* add staticresources md template ([3de0a52](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/3de0a52fc52116bb1321764667219fdd2ed502e6))
+* add support to delete directories and component.content ([6f1e4e7](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/6f1e4e7fa3142ee3e5ff6e598baa9f68c42e105e))
+* enhance component filter by template, json creates everything ([777d6c1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/777d6c133bed60367256a043d69b4e610c6ff454))
+* include attributes fullName and name to root of componentContent ([ee38dee](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/ee38deec27c91983ed9ca9913b767dc648560824))
+
 ## [0.7.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.6.0...v0.7.0) (2023-07-12)
 
 
