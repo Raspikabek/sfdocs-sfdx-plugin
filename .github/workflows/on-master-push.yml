@@ -5,6 +5,7 @@ on:
       - master
     paths-ignore:
       - '**.md'
+      - '!src/templates/*.md'
       - 'img/**'
 
 name: release-please
