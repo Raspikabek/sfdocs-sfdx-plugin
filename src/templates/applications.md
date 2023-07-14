@@ -6,7 +6,9 @@
 - Logo: {{CustomApplication.brand.logo}}
 - Should override Org Theme? {{CustomApplication.brand.shouldOverrideOrgTheme}}
 - UI Type: {{CustomApplication.uiType}}
-
+{{#if CustomApplication.utilityBar}}
+- {{CustomApplication.utilityBar}}
+{{/if}}
 # Form Factors:
 
 {{#each CustomApplication.formFactors}}
