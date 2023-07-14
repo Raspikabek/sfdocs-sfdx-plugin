@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.8.0...v0.8.1) (2023-07-14)
+
+
+### Bug Fixes
+
+* amend template typos ([5c3b056](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/5c3b056edbd226a931e44addc36aee3a395e1f80))
+* byppass ignore for templates ([4ebe4a2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/4ebe4a29c9560d183134c6ca7744d3ae0eb35b84))
+
 ## [0.8.0](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.7.0...v0.8.0) (2023-07-14)
 
 
