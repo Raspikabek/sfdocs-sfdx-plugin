@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.2](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.8.1...v0.8.2) (2023-07-16)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/sf-plugins-core from 3.1.4 to 3.1.7 ([61fc4e5](https://github.com/Raspikabek/sfdocs-sfdx-plugin/commit/61fc4e5de676f59fd166ee1bde743d1c96b1ce33))
+
 ## [0.8.1](https://github.com/Raspikabek/sfdocs-sfdx-plugin/compare/v0.8.0...v0.8.1) (2023-07-14)
 
 
