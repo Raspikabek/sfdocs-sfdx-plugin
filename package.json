@@ -8,11 +8,11 @@
   },
   "homepage": "https://sfdocs.netlify.app",
   "dependencies": {
-    "@oclif/core": "^2.8.11",
-    "@salesforce/core": "^4.3.7",
+    "@oclif/core": "^3.26.0",
+    "@salesforce/core": "^8.14.1",
     "@salesforce/kit": "^3.0.3",
-    "@salesforce/sf-plugins-core": "^3.1.7",
-    "@salesforce/source-deploy-retrieve": "^9.3.3",
+    "@salesforce/sf-plugins-core": "^12.2.2",
+    "@salesforce/source-deploy-retrieve": "^12.20.1",
     "handlebars": "^4.7.7",
     "tslib": "^2"
   },
